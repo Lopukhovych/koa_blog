@@ -1,0 +1,22 @@
+/* from main folder directory */
+ npm init // fill out details of your project
+ npm install concurrently — save-dev
+
+ // Add start, backend and frontend scripts to package.json
+ /* package.json */
+ {
+   “name”: “todo-tutorial”,
+   “version”: “0.1.0”,
+   “private”: true,
+   “dependencies”: {},
+   “scripts”: {
+     “start”: “concurrently — kill-otherss \”npm run backend\” \”npm run frontend\””,
+     “backend”: “cd backend && npm run dev”,
+     “frontend”: “cd frontend && npm start”,
+     “build”: “cd frontend && npm run build”
+   },
+   “devDependencies”: {
+     “concurrently”: “³.5.1”
+   }
+ }
+```
