@@ -5,7 +5,7 @@ async function comment_list(ctx, next) {
     try {
         await auth(ctx, next);
         const comments = await models.Comment.findAll();
-        console.log('comments: ', comments);
+        // console.log('comments: ', comments);
         ctx.status = 200;
         ctx.body = {comments};
     } catch (error) {
