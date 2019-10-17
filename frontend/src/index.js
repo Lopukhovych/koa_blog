@@ -7,8 +7,6 @@ import sagaMiddleware, {createSaga} from './config/configSaga';
 
 import App from './App';
 
-import './index.css';
-
 const initialState = {};
 
 const store = configureStore(initialState);

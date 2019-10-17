@@ -1,10 +1,12 @@
+/** @jsx jsx */
+import {css, jsx } from '@emotion/core';
 import React from 'react';
 import {Route, Switch} from 'react-router';
 import {ConnectedRouter} from 'connected-react-router';
 
 import {history} from 'src/config/configureStore';
-
 import Header from 'src/components/Header';
+import Footer from 'src/components/Footer';
 
 import HomeContainer from 'src/Home';
 import AuthorContainer from 'src/Author';
@@ -18,11 +20,15 @@ import CategoryContainer from 'src/Category';
 
 import './App.css';
 
+const mainStyle = css({
+  flex: '1 0 auto',
+});
+
 function App() {
   return (
     <ConnectedRouter history={history}>
       <Header />
-      <>
+      <main css={mainStyle}>
         <Switch>
           <Route exact path="/" component={HomeContainer} />
           <Route path="/author" component={AuthorContainer} />
@@ -34,7 +40,8 @@ function App() {
           <Route path="/myprofile" component={MyProfileContainer} />
           <Route path="*" component={NotFoundContainer} />
         </Switch>
-      </>
+      </main>
+      <Footer />
     </ConnectedRouter>
   );
 }
