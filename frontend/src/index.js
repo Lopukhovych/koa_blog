@@ -5,6 +5,8 @@ import * as serviceWorker from './serviceWorker';
 import configureStore from './config/configureStore';
 import sagaMiddleware, {createSaga} from './config/configSaga';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import App from './App';
 
 const initialState = {};

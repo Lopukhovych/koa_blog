@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import {css, jsx } from '@emotion/core';
+import {css, jsx} from '@emotion/core';
 import React from 'react';
 import {Route, Switch} from 'react-router';
 import {ConnectedRouter} from 'connected-react-router';
@@ -18,7 +18,21 @@ import AuthorizationContainer from 'src/Authorization';
 import MyProfileContainer from 'src/MyProfile';
 import CategoryContainer from 'src/Category';
 
+import {mq, smallDesktop} from 'src/core/styles';
+
 import './App.css';
+
+const rootStyles = css({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  maxWidth: '1180px',
+  margin: '0 auto',
+  overflow: 'hidden',
+  [mq[smallDesktop]]: {
+    // background: 'red',
+  },
+});
 
 const mainStyle = css({
   flex: '1 0 auto',
@@ -26,23 +40,26 @@ const mainStyle = css({
 
 function App() {
   return (
-    <ConnectedRouter history={history}>
-      <Header />
-      <main css={mainStyle}>
-        <Switch>
-          <Route exact path="/" component={HomeContainer} />
-          <Route path="/author" component={AuthorContainer} />
-          <Route path="/article" component={ArticleContainer} />
-          <Route path="/category" component={CategoryContainer} />
-          <Route path="/about_us" component={AboutUsContainer} />
-          <Route path="/contact_us" component={ContactUsContainer} />
-          <Route path="/auth" component={AuthorizationContainer} />
-          <Route path="/myprofile" component={MyProfileContainer} />
-          <Route path="*" component={NotFoundContainer} />
-        </Switch>
-      </main>
-      <Footer />
-    </ConnectedRouter>
+    <div css={rootStyles}>
+      <ConnectedRouter history={history}>
+        <Header />
+        <main css={mainStyle}>
+          <Switch>
+            <Route exact path="/" component={HomeContainer} />
+            <Route path="/author" component={AuthorContainer} />
+            <Route path="/article" component={ArticleContainer} />
+            <Route path="/category" component={CategoryContainer} />
+            <Route path="/about_us" component={AboutUsContainer} />
+            <Route path="/contact_us" component={ContactUsContainer} />
+            <Route path="/auth" component={AuthorizationContainer} />
+            <Route path="/myprofile" component={MyProfileContainer} />
+            <Route path="*" component={NotFoundContainer} />
+          </Switch>
+        </main>
+        <Footer />
+      </ConnectedRouter>
+    </div>
+
   );
 }
 
