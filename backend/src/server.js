@@ -5,7 +5,9 @@ const serve  = require('koa-static');
 
 const app = require('./app');
 const router = require('./routes');
-const {notFound, unauthorized} = require('./notFound');
+
+const {notFound, unauthorized} = require('src/middleware/notFound');
+const {handleException} = require('src/middleware/exception');
 const port = 3200;
 
 app.use(async (ctx, next) => {
@@ -16,6 +18,9 @@ app.use(async (ctx, next) => {
 });
 
 app.use(logger('tiny'));
+
+app.use(handleException);
+
 app.use(bodyParser({
     enableTypes: ['json', 'form'],
     extendTypes: {

@@ -49,7 +49,7 @@ module.exports = {
         if (!ctx.request.body.name || !ctx.request.body.password || !ctx.request.body.email) {
             ctx.status = 400;
             ctx.body = {
-                error: 'expected an object with username, password, email, name but got: ' + ctx.request.body
+                error: 'expected an object with username, password, email, name but didn\'t  get this params'
             };
         }
         const userData = {...ctx.request.body};
