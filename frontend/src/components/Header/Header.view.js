@@ -27,15 +27,15 @@ const HeaderView = ({
   popoverRef, closeLoginPopover,
 }) => (
   <Navbar bg="light" variant="light">
-    <Navbar.Brand href="/">
+    <Navbar.Brand as={Link} to="/">
       <img css={logoStyle} src={logo} alt="koa_blog" />
     </Navbar.Brand>
     <Nav className="mr-auto">
-      <Nav.Link href="/">Home</Nav.Link>
-      <Nav.Link href="/category">Categories</Nav.Link>
-      <Nav.Link href="/author">Authors</Nav.Link>
-      <Nav.Link href="/about_us">About us</Nav.Link>
-      <Nav.Link href="/contact_us">Contacts</Nav.Link>
+      <Nav.Link as={Link} to="/">Home</Nav.Link>
+      <Nav.Link as={Link} to="/category">Categories</Nav.Link>
+      <Nav.Link as={Link} to="/author">Authors</Nav.Link>
+      <Nav.Link as={Link} to="/about_us">About us</Nav.Link>
+      <Nav.Link as={Link} to="/contact_us">Contacts</Nav.Link>
     </Nav>
     <Form inline>
       <FormControl type="text" placeholder="Search" className="mr-sm-2" />
