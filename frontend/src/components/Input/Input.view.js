@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import {css, jsx} from '@emotion/core';
-// import React from 'react';
 import {
   Form, FormControl,
 } from 'react-bootstrap';
@@ -9,8 +8,12 @@ const invalidControl = css({
   border: '1px solid red',
 });
 
+const errorTextStyle = css({
+  color: 'red !important',
+});
+
 const InputView = ({
-  label, text, onChange, className, invalid, touched, shouldValidate, elementConfig, ...props
+  label, text, onChange, className, invalid, touched, shouldValidate, elementConfig, errorMessage, ...props
 }) => {
   let inputElement = null;
   let inputCss = {};
@@ -22,11 +25,18 @@ const InputView = ({
   switch (props.elementType) {
     case 'input':
       inputElement = (
-        <FormControl
-          onChange={onChange}
-          css={{...className, ...inputCss}}
-          {...elementConfig}
-        />
+        <>
+          <FormControl
+            onChange={onChange}
+            css={{...className, ...inputCss}}
+            {...elementConfig}
+          />
+          {invalid && touched && (
+            <Form.Text css={errorTextStyle} className="text-muted">
+              {errorMessage}
+            </Form.Text>
+          )}
+        </>
       );
       break;
     case 'textarea':

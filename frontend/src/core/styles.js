@@ -1,6 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
-
 export const smallMobile = 'smallMobile';
 export const mobile = 'mobile';
 export const bigMobile = 'bigMobile';

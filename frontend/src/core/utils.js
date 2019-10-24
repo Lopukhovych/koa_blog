@@ -4,7 +4,6 @@ export const updateObject = (oldObject, updatedProperties) => ({
 });
 
 export const checkValidity = (value, rules) => {
-    console.log('value, rules: ', value, rules);
   let isValid = true;
   if (!rules) {
     return true;
@@ -33,3 +32,9 @@ export const checkValidity = (value, rules) => {
 
   return isValid;
 };
+
+export const getStorageItem = (item) => localStorage.getItem(item);
+
+export const setStorageItem = (key, value) => localStorage.setItem(key, value);
+
+export const removeStorageItem = (key) => localStorage.removeItem(key);

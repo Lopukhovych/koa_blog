@@ -1,3 +1,4 @@
+import hash from 'object-hash';
 import {timeoutPromise} from './others';
 
 
@@ -8,11 +9,17 @@ const timeoutPromiseDecorator = (ms) => (requestFunc) => async (...args) => time
 
 // api
 
-const parseRes = (res) => {
+function ResponseException(response) {
+  this.code = response.status;
+  this.message = response.message;
+  this.statusText = response.statusText;
+}
+
+const parseRes = async (res) => {
   if (res.ok) {
     return res.json();
   }
-  throw new Error(res.statusText);
+  throw new ResponseException(res);
 };
 
 const parseResultDecorator = (requestFunc) => async (...args) => {
@@ -50,11 +57,17 @@ const baseHeadersDecorator = (requestFunc) => async (...args) => {
 
 const requestCachingDecorator = (cacheMap) => (requestFunc) => async (...args) => {
   const [url, options, useCache] = args;
+  const optionHash = hash({options});
 
-  if (useCache !== false && cacheMap[url]) return Promise.resolve(cacheMap[url]);
+  if (useCache !== false && cacheMap[url] && cacheMap[url][optionHash]) {
+    return Promise.resolve(cacheMap[url][optionHash]);
+  }
 
   const res = await requestFunc.call(null, url, options);
-  cacheMap[url] = res;
+
+  if (!cacheMap[url]) cacheMap[url] = {};
+  cacheMap[url][optionHash] = res;
+
   return res;
 };
 

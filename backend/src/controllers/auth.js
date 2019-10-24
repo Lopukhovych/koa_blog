@@ -37,12 +37,16 @@ module.exports = {
             const compared = await bcrypt.compare(enteredPass, password);
             if (compared) {
                 const token = await jwt_auth.sign({...userInfoWithoutPassword});
-                ctx.body = {token}
+                const userInfo = {
+                    name: userInfoWithoutPassword['name'],
+                    email: userInfoWithoutPassword['email']
+                };
+                ctx.body = {token, ...userInfo}
             } else {
                 return setUnauthorized(ctx);
             }
         } catch (error) {
-            console.log(error.message);
+            return setUnauthorized(ctx);
         }
     },
     signup: async function (ctx, next) {
@@ -88,7 +92,7 @@ async function getUserByEmail(ctx) {
         const user = await models.Users.findOne({where: {email: email}, raw: true});
         return user ? user : null;
     } catch (error) {
-        console.log('getUserByEmail error: ', error.message);
+        console.error('getUserByEmail error: ', error.message);
     }
 
 }

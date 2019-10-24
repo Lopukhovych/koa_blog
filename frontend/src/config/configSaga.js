@@ -1,5 +1,6 @@
 import createSagaMiddleware from 'redux-saga';
-import {all, call, fork} from 'redux-saga/effects';
+import {all, fork} from 'redux-saga/effects';
+import {watchLogin} from 'src/components/Login/redux/sagas';
 
 
 const sagaMiddleware = createSagaMiddleware({
@@ -29,6 +30,7 @@ export function createSaga() {
   return function* () {
     console.log('saga connected: ');
     yield all([
+      fork(watchLogin),
       // fork(watchCompanies),
       // fork(watchLoginAccount),
       // fork(watchLogoutAccount),
