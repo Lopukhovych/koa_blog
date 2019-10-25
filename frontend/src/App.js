@@ -16,6 +16,7 @@ import NotFoundContainer from 'src/NotFound';
 import AuthorizationContainer from 'src/Authorization';
 import MyProfileContainer from 'src/MyProfile';
 import CategoryContainer from 'src/Category';
+import RootMiddlewareContainer from 'src/hocs/RootMiddleware';
 
 import {mq, smallDesktop} from 'src/core/styles';
 
@@ -41,21 +42,23 @@ function App() {
   return (
     <div css={rootStyles}>
       <ConnectedRouter history={history}>
-        <Header />
-        <main css={mainStyle}>
-          <Switch>
-            <Route exact path="/" component={HomeContainer} />
-            <Route path="/author" component={AuthorContainer} />
-            <Route path="/article" component={ArticleContainer} />
-            <Route path="/category" component={CategoryContainer} />
-            <Route path="/about_us" component={AboutUsContainer} />
-            <Route path="/contact_us" component={ContactUsContainer} />
-            <Route path="/auth" component={AuthorizationContainer} />
-            <Route path="/myprofile" component={MyProfileContainer} />
-            <Route path="*" component={NotFoundContainer} />
-          </Switch>
-        </main>
-        <Footer />
+        <RootMiddlewareContainer>
+          <Header />
+          <main css={mainStyle}>
+            <Switch>
+              <Route exact path="/" component={HomeContainer} />
+              <Route path="/author" component={AuthorContainer} />
+              <Route path="/article" component={ArticleContainer} />
+              <Route path="/category" component={CategoryContainer} />
+              <Route path="/about_us" component={AboutUsContainer} />
+              <Route path="/contact_us" component={ContactUsContainer} />
+              <Route path="/auth" component={AuthorizationContainer} />
+              <Route path="/myprofile" component={MyProfileContainer} />
+              <Route path="*" component={NotFoundContainer} />
+            </Switch>
+          </main>
+          <Footer />
+        </RootMiddlewareContainer>
       </ConnectedRouter>
     </div>
 

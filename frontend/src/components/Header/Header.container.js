@@ -27,8 +27,8 @@ class HeaderContainer extends PureComponent {
     }
 }
 
-const mapStateToProps = ({login}) => ({
-  userData: login.userData,
+const mapStateToProps = ({userData}) => ({
+  userData: userData.userData,
 });
 
 export default connect(mapStateToProps)(HeaderContainer);

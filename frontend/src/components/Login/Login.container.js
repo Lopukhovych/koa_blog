@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
-import {checkValidity, updateObject} from 'src/core/utils';
+import {checkValidity, updateObject} from 'src/utils/formUtils';
 import LoginView from './Login.view';
 import {loginUser as loginUserAction} from './redux/actions';
 
@@ -55,25 +55,25 @@ class LoginContainer extends PureComponent {
     return {errorMessage: null};
   }
 
-    changeFormValueHandler = (value, controlName) => {
-      const {controls} = this.state;
-      const updatedControlName = updateObject(controls[controlName], {
-        value,
-        valid: checkValidity(value, controls[controlName].validation),
-        touched: true,
+  changeFormValueHandler = (value, controlName) => {
+    const {controls} = this.state;
+    const updatedControlName = updateObject(controls[controlName], {
+      value,
+      valid: checkValidity(value, controls[controlName].validation),
+      touched: true,
 
-      });
-      const updatedControls = updateObject(controls, {
-        [controlName]: updatedControlName,
-      });
-      let formIsValid = true;
+    });
+    const updatedControls = updateObject(controls, {
+      [controlName]: updatedControlName,
+    });
+    let formIsValid = true;
 
-      Object.values(updatedControls).forEach((item) => {
-        formIsValid = item.valid && formIsValid;
-      });
+    Object.values(updatedControls).forEach((item) => {
+      formIsValid = item.valid && formIsValid;
+    });
 
-      this.setState({controls: updatedControls, formIsValid});
-    };
+    this.setState({controls: updatedControls, formIsValid});
+  };
 
     submitFormHandler = (e) => {
       e.preventDefault();
@@ -107,7 +107,6 @@ class LoginContainer extends PureComponent {
 
 const mapStateToProps = ({login}) => ({
   loginError: login.error,
-  token: login.token,
 });
 
 const mapDispatchToProps = {

@@ -21,7 +21,7 @@ const AuthorizationView = () => (
         <Card className="text-center">
           <Card.Header>Sign Up</Card.Header>
           <Card.Body>
-            <SignUpContainer />
+            <SignUpContainer showLabel />
           </Card.Body>
         </Card>
       </Col>

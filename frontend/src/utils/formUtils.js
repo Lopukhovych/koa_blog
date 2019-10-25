@@ -32,9 +32,3 @@ export const checkValidity = (value, rules) => {
 
   return isValid;
 };
-
-export const getStorageItem = (item) => localStorage.getItem(item);
-
-export const setStorageItem = (key, value) => localStorage.setItem(key, value);
-
-export const removeStorageItem = (key) => localStorage.removeItem(key);

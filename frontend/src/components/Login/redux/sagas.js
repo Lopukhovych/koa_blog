@@ -1,25 +1,25 @@
-import {put, takeEvery} from 'redux-saga/effects';
+import {put, call, takeEvery} from 'redux-saga/effects';
 import {
-  authStart, authSuccess, authFail, LOGIN_USER,
+  loginStart, loginSuccess, loginFail, LOGIN_USER,
 } from './actions';
 
 import {login} from '../api';
 
-export function* authUserSaga(action) {
+export function* loginUserSaga(action) {
   const authData = {
     email: action.email,
     password: action.password,
     returnSecureToken: true,
   };
-  yield put(authStart());
+  yield put(loginStart());
   try {
-    const resp = yield login(authData);
-    yield put(authSuccess(resp));
+    const resp = yield call(login, authData);
+    yield put(loginSuccess(resp));
   } catch (error) {
-    yield put(authFail(error));
+    yield put(loginFail(error));
   }
 }
 
 export function* watchLogin() {
-  yield takeEvery(LOGIN_USER, authUserSaga);
+  yield takeEvery(LOGIN_USER, loginUserSaga);
 }
