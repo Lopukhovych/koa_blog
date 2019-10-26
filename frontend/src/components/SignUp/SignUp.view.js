@@ -52,7 +52,7 @@ const SignUpView = ({
         variant="primary"
         type="submit"
       >
-                Log In
+                Sign Up
       </Button>
       {errorMessage && <p css={errorMessageStyle}>{errorMessage}</p>}
     </Form>

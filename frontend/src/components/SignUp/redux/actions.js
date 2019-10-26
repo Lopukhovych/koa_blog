@@ -1,4 +1,3 @@
-import {setStorageItem} from 'src/utils/others';
 import {AUTH_SUCCESS} from 'src/core/redux/actions';
 
 export const SIGNUP_USER = 'SIGNUP_USER';
@@ -14,14 +13,10 @@ export const signUpStart = () => ({
   type: SIGNUP_REQUEST_PENGING,
 });
 
-export const signUpSuccess = (payload) => {
-  const {token, ...userData} = payload;
-  if (payload.token) setStorageItem('token', token);
-  return {
-    type: AUTH_SUCCESS,
-    payload: userData,
-  };
-};
+export const signUpSuccess = (userData) => ({
+  type: AUTH_SUCCESS,
+  payload: userData,
+});
 
 export const signUpFail = (error) => ({
   type: SIGNUP_REQUEST_FAILED,

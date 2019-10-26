@@ -1,4 +1,3 @@
-import {setStorageItem} from 'src/utils/others';
 import {AUTH_SUCCESS} from 'src/core/redux/actions';
 
 export const LOGIN_USER = 'LOGIN_USER';
@@ -15,9 +14,7 @@ export const loginStart = () => ({
   type: LOGIN_REQUEST_PENGING,
 });
 
-export const loginSuccess = (payload) => {
-  const {token, ...userData} = payload;
-  if (token) setStorageItem('token', token);
+export const loginSuccess = (userData) => {
   return {
     type: AUTH_SUCCESS,
     payload: userData,

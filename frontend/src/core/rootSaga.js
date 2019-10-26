@@ -2,6 +2,7 @@ import {all, fork} from 'redux-saga/effects';
 import {watchLogin} from 'src/components/Login/redux/sagas';
 import {watchSignUp} from 'src/components/SignUp/redux/sagas';
 import {watchInitialize} from 'src/hocs/RootMiddleware/redux/sagas';
+import {watchSignOut} from './redux/sagas';
 
 export default function createSaga() {
   return function* () {
@@ -10,6 +11,7 @@ export default function createSaga() {
       fork(watchLogin),
       fork(watchSignUp),
       fork(watchInitialize),
+      fork(watchSignOut),
       // fork(watchCompanies),
       // fork(watchLoginAccount),
       // fork(watchLogoutAccount),

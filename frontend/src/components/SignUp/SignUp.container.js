@@ -33,7 +33,7 @@ class SignUpContainer extends PureComponent {
           elementType: 'input',
           elementConfig: {
             type: 'email',
-            placeholder: 'Enter your email',
+            placeholder: 'Enter your email*',
           },
           value: '',
           validation: {
@@ -48,7 +48,7 @@ class SignUpContainer extends PureComponent {
           elementType: 'input',
           elementConfig: {
             type: 'password',
-            placeholder: 'Enter your secret word',
+            placeholder: 'Enter your secret word*',
           },
           value: '',
           validation: {
@@ -64,7 +64,7 @@ class SignUpContainer extends PureComponent {
           elementType: 'input',
           elementConfig: {
             type: 'password',
-            placeholder: 'Enter your password',
+            placeholder: 'Enter your password*',
           },
           value: '',
           validation: {
@@ -79,7 +79,7 @@ class SignUpContainer extends PureComponent {
           elementType: 'input',
           elementConfig: {
             type: 'password',
-            placeholder: 'Repeat your password',
+            placeholder: 'Repeat your password*',
           },
           value: '',
           validation: {
@@ -109,7 +109,6 @@ class SignUpContainer extends PureComponent {
   checkPasswordConfirmation = (value, controlName) => {
     const {controls} = this.state;
     if (controlName === confirmPasswordControl) {
-      console.log('confirmPasswordControl:');
       const updatedControlName = updateObject(controls[controlName], {
         value,
         valid: checkValidity(value, controls[controlName].validation) && controls[passwordControl].value === value,
@@ -117,9 +116,7 @@ class SignUpContainer extends PureComponent {
       });
       return updateObject(controls, {[controlName]: updatedControlName});
     }
-    console.log('!controls[confirmPasswordControl].touched: ', !controls[confirmPasswordControl].touched);
     if (!controls[confirmPasswordControl].touched) {
-      console.log('controls[confirmPasswordControl].touched:');
       const updatedControlName = updateObject(controls[controlName], {
         value,
         valid: checkValidity(value, controls[controlName].validation),
@@ -127,7 +124,6 @@ class SignUpContainer extends PureComponent {
       });
       return updateObject(controls, {[controlName]: updatedControlName});
     }
-    console.log('controls[confirmPasswordControl].touched: ', controls[confirmPasswordControl].touched);
     const updatedPassword = updateObject(controls[controlName], {
       value,
       valid: checkValidity(value, controls[controlName].validation),
@@ -138,12 +134,11 @@ class SignUpContainer extends PureComponent {
       valid: controls[confirmPasswordControl].value === updatedPassword.value,
       touched: true,
     });
-    const m = updateObject(controls, {
+    const updatedControls = updateObject(controls, {
       [controlName]: updatedPassword,
       [confirmPasswordControl]: updateConfirmationPassword,
     });
-    console.log('updateObject: ', m);
-    return m;
+    return updatedControls;
   };
 
   changeFormValueHandler = (value, controlName) => {
@@ -182,7 +177,6 @@ class SignUpContainer extends PureComponent {
           signUpValues[key] = controls[key].value;
         }
       });
-      console.log('signUpValues: ', signUpValues);
       signUpUser(signUpValues);
     }
   };

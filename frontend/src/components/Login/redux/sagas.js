@@ -1,8 +1,9 @@
 import {put, call, takeEvery} from 'redux-saga/effects';
+import {setStorageItem} from 'src/utils/others';
+
 import {
   loginStart, loginSuccess, loginFail, LOGIN_USER,
 } from './actions';
-
 import {login} from '../api';
 
 export function* loginUserSaga(action) {
@@ -13,8 +14,9 @@ export function* loginUserSaga(action) {
   };
   yield put(loginStart());
   try {
-    const resp = yield call(login, authData);
-    yield put(loginSuccess(resp));
+    const {token, ...userData} = yield call(login, authData);
+    if (token) setStorageItem('token', token);
+    yield put(loginSuccess(userData));
   } catch (error) {
     yield put(loginFail(error));
   }

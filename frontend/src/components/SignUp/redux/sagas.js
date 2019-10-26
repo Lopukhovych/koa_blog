@@ -1,4 +1,5 @@
 import {put, call, takeEvery} from 'redux-saga/effects';
+import {setStorageItem} from 'src/utils/others';
 import {
   signUpStart, signUpSuccess, signUpFail, SIGNUP_USER,
 } from './actions';
@@ -15,8 +16,9 @@ export function* signupUserSaga(action) {
   };
   yield put(signUpStart());
   try {
-    const resp = yield call(signup, authData);
-    yield put(signUpSuccess(resp));
+    const {token, ...userData} = yield call(signup, authData);
+    if (token) setStorageItem('token', token);
+    yield put(signUpSuccess(userData));
   } catch (error) {
     yield put(signUpFail(error));
   }

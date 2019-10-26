@@ -1,16 +1,12 @@
-const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const models = require("../../models/index");
 const jwt_auth = require('../auth/index');
-
-const secret = process.env.JWT_SECRET || 'jwt_secret';
 
 module.exports = {
     auth: async function (ctx, next) {
         try {
             console.log('ctx.request.header: ', ctx.request.header);
             const token = ctx.request.header.authorization;
-            // const verified = jsonwebtoken.verify(token, secret);
             const verified = await jwt_auth.verify(token);
             if (!verified) {
                 return setUnauthorized(ctx);
@@ -81,6 +77,7 @@ module.exports = {
         }
         const userData = {...ctx.request.body};
         userData.password = await bcrypt.hash(ctx.request.body.password, 8);
+        userData.secretWord = await bcrypt.hash(ctx.request.body.secretWord, 10);
         const email = ctx.request.body.email.toString();
         const user = await getUserByEmail(email);
         if (!user) {

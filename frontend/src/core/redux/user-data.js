@@ -1,4 +1,4 @@
-import {AUTH_SUCCESS} from './actions';
+import {AUTH_SUCCESS, SIGN_OUT_SUCCESS} from './actions';
 
 const initialState = {
   userData: null,
@@ -11,6 +11,8 @@ const reducer = (state = initialState, action) => {
         ...initialState,
         userData: {...action.payload},
       };
+    case SIGN_OUT_SUCCESS:
+      return {...initialState};
     default:
       break;
   }
