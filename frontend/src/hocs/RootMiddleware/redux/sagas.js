@@ -1,11 +1,6 @@
 import {put, call, takeEvery} from 'redux-saga/effects';
 import {getStorageItem} from 'src/utils/others';
 
-//
-// const token = getStorageItem('token');
-// // TODO check token validity
-// if (token) {
-
 import {
   initializeStart, initializeSuccess, initializeFail, INITIALIZE_USER,
 } from './actions';

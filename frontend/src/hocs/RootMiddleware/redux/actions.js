@@ -14,7 +14,7 @@ export const initializeStart = () => ({
 
 export const initializeSuccess = (payload) => {
   const {refreshToken, ...userData} = payload;
-  if (payload.token) setStorageItem('token', refreshToken);
+  if (refreshToken) setStorageItem('token', refreshToken);
   return {
     type: AUTH_SUCCESS,
     payload: userData,

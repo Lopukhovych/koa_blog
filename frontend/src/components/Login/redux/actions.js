@@ -17,7 +17,7 @@ export const loginStart = () => ({
 
 export const loginSuccess = (payload) => {
   const {token, ...userData} = payload;
-  if (payload.token) setStorageItem('token', token);
+  if (token) setStorageItem('token', token);
   return {
     type: AUTH_SUCCESS,
     payload: userData,
