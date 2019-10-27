@@ -99,7 +99,7 @@ class SignUpContainer extends PureComponent {
     if (props.signupError && props.signupError.code === 401) {
       return {errorMessage: 'User is unauthorized! Please try again.'};
     }
-    if (props.signupError) {
+    if (props.signUpError) {
       return {errorMessage: 'Authorization error! Check credentials and try later.'};
     }
     return {errorMessage: null};

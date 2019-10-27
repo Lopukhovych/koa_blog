@@ -1,7 +1,6 @@
-import {AUTH_SUCCESS} from 'src/core/redux/actions';
-
 export const LOGIN_USER = 'LOGIN_USER';
 export const LOGIN_REQUEST_PENGING = 'LOGIN_REQUEST_PENGING';
+export const LOGIN_REQUEST_SUCCESS = 'LOGIN_REQUEST_SUCCESS';
 export const LOGIN_REQUEST_FAILED = 'LOGIN_REQUEST_FAILED';
 
 
@@ -14,10 +13,9 @@ export const loginStart = () => ({
   type: LOGIN_REQUEST_PENGING,
 });
 
-export const loginSuccess = (userData) => {
+export const loginSuccess = () => {
   return {
-    type: AUTH_SUCCESS,
-    payload: userData,
+    type: LOGIN_REQUEST_SUCCESS,
   };
 };
 

@@ -1,7 +1,6 @@
-import {AUTH_SUCCESS} from 'src/core/redux/actions';
-
 export const SIGNUP_USER = 'SIGNUP_USER';
 export const SIGNUP_REQUEST_PENGING = 'SIGNUP_REQUEST_PENGING';
+export const SIGNUP_REQUEST_SUCCESS = 'SIGNUP_REQUEST_SUCCESS';
 export const SIGNUP_REQUEST_FAILED = 'SIGNUP_REQUEST_FAILED';
 
 export const signUpUser = (userData) => ({
@@ -13,9 +12,8 @@ export const signUpStart = () => ({
   type: SIGNUP_REQUEST_PENGING,
 });
 
-export const signUpSuccess = (userData) => ({
-  type: AUTH_SUCCESS,
-  payload: userData,
+export const signUpSuccess = () => ({
+  type: SIGNUP_REQUEST_SUCCESS,
 });
 
 export const signUpFail = (error) => ({

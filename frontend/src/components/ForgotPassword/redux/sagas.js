@@ -1,5 +1,6 @@
 import {put, call, takeEvery} from 'redux-saga/effects';
 import {setStorageItem} from 'src/utils/others';
+import {authUserSuccess} from 'src/core/redux/actions';
 import {
   restorePasswordStart, restorePasswordSuccess, restorePasswordFail, RESTORE_PASSWORD,
 } from './actions';
@@ -16,7 +17,8 @@ export function* restorePasswordSaga(action) {
   try {
     const {token, ...userData} = yield call(restorePasswordRequest, authData);
     if (token) setStorageItem('token', token);
-    yield put(restorePasswordSuccess(userData));
+    yield put(authUserSuccess(userData));
+    yield put(restorePasswordSuccess());
   } catch (error) {
     yield put(restorePasswordFail(error));
   }
