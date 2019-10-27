@@ -98,6 +98,34 @@ module.exports = {
         }
 
     },
+    restorePassword: async function(ctx, next) {
+        try {
+            const email = ctx.request.body.email.toString();
+            const enteredSecretWord = ctx.request.body.secretWord.toString();
+            const user = await getUserByEmail(email);
+
+            if (!user || !enteredSecretWord) {
+                return setUnauthorized(ctx);
+            }
+
+            const {
+                password,
+                secretWord,
+                ...userInfoWithoutPassword
+            } = user;
+            const compared = await bcrypt.compare(enteredSecretWord, secretWord);
+
+            if (compared) {
+                const token = await jwt_auth.sign({...userInfoWithoutPassword});
+                const userInfo = await getResponseUserInfo(userInfoWithoutPassword);
+                return ctx.body = {token, ...userInfo}
+            }
+            return setForbidden(ctx);
+        } catch (error) {
+            console.error('controllers auth error');
+            throw Error(error);
+        }
+    },
     badRequest: async function (ctx, error) {
         ctx.status = 400;
         ctx.body = {

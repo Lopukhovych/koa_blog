@@ -35,6 +35,11 @@ const logoWrapper = css({
   margin: '0 10px',
   cursor: 'pointer',
 });
+const forgotPasswordLink = css({
+  display: 'inline-block',
+  marginTop: '4px',
+  fontSize: '13px',
+});
 
 const HeaderView = ({
   popoverRef, closeHeaderPopover, userData, signOutHandler,
@@ -122,6 +127,14 @@ const HeaderView = ({
                   >
                                 Sign Up
                   </Button>
+                </Link>
+                <br />
+                <Link
+                  onClick={closeHeaderPopover}
+                  css={forgotPasswordLink}
+                  to="/auth/forgot"
+                >
+                  Forgot password?
                 </Link>
               </Popover.Content>
             </Popover>

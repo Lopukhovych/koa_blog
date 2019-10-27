@@ -87,7 +87,7 @@ class SignUpContainer extends PureComponent {
             minLength: 3,
           },
           valid: false,
-          errorMessage: 'Do not match with password',
+          errorMessage: 'Do not match with password field',
           touched: false,
         },
       },
@@ -134,11 +134,10 @@ class SignUpContainer extends PureComponent {
       valid: controls[confirmPasswordControl].value === updatedPassword.value,
       touched: true,
     });
-    const updatedControls = updateObject(controls, {
+    return updateObject(controls, {
       [controlName]: updatedPassword,
       [confirmPasswordControl]: updateConfirmationPassword,
     });
-    return updatedControls;
   };
 
   changeFormValueHandler = (value, controlName) => {
@@ -180,7 +179,6 @@ class SignUpContainer extends PureComponent {
       signUpUser(signUpValues);
     }
   };
-
 
   render() {
     const {controls, formIsValid, errorMessage} = this.state;

@@ -1,5 +1,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
+import {Route, Switch} from 'react-router';
+import ForgotPasswordContainer from 'src/components/ForgotPassword';
 import AuthorizationView from './Authorization.view';
 
 
@@ -18,8 +20,14 @@ class AuthorizationContainer extends PureComponent {
   }
 
   render() {
+    const {match} = this.props;
     return (
-      <AuthorizationView />
+      <Switch>
+        <Route path={`${match.path}/forgot`} component={ForgotPasswordContainer} />
+        <Route exact path={match.path}>
+          <AuthorizationView />
+        </Route>
+      </Switch>
     );
   }
 }
