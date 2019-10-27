@@ -5,3 +5,5 @@
 **/package-lock.json
 **/.env
 **/setup_backend.txt
+**/yarn.lock
+**/build

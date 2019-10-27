@@ -33,8 +33,21 @@ async function comment_update(ctx) {
 
 async function comment_create(ctx) {
     const requestBody = ctx.request.body;
-    ctx.status = 200;
-    ctx.body = await models.Comment.create(requestBody.comment);
+    try {
+        ctx.status = 200;
+        const newComment = {
+            userId: +requestBody.userId,
+            comment: requestBody.comment.toString(),
+            postId: +requestBody.postId,
+        };
+        ctx.body = await models.Comment.create(requestBody);
+    } catch (error) {
+        if (error.name === 'SequelizeForeignKeyConstraintError') {
+            ctx.throw(400, 'Foreign key does not exist');
+        }
+        ctx.throw(400, 'Comment create error');
+    }
+
 }
 
 async function comment_delete(ctx) {

@@ -3,11 +3,12 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import configureStore from './config/configureStore';
-import sagaMiddleware, {createSaga} from './config/configSaga';
+import sagaMiddleware from './config/configSaga';
+import createSaga from './core/rootSaga';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import App from './App';
-
-import './index.css';
 
 const initialState = {};
 

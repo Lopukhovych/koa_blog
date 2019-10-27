@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "start": "nodemon src/server.js",
+    "start": "NODE_PATH=. nodemon src/server.js",
     "test": "mocha"
   },
   "author": "volod34",

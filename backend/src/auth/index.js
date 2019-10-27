@@ -14,6 +14,7 @@ module.exports = {
     sign: async function (payload, $Options)  {
         const signOptions = {
             ...sOptions,
+            //TODO change expiresIn to 2 days
             expiresIn: "30d",    // 30 days validity
             algorithm: "RS256"
         };

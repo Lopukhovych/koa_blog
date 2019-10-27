@@ -1,13 +1,48 @@
 import React, {PureComponent} from 'react';
+import {connect} from 'react-redux';
+import {signOutUser as signOutUserAction} from 'src/core/redux/actions';
+
+import HeaderView from './Header.view';
 
 class HeaderContainer extends PureComponent {
-  render() {
-    return (
-      <div>
-        <p>header</p>
-      </div>
-    );
-  }
+    popoverRef = React.createRef();
+
+    componentDidUpdate(prevProps) {
+      const {userData} = this.props;
+      if (userData && userData !== prevProps.userData) {
+        this.closeHeaderPopover();
+      }
+    }
+
+    closeHeaderPopover = () => {
+      this.popoverRef.current && this.popoverRef.current.hide();
+    };
+
+    signOutHandler = () => {
+      const {signOutUser} = this.props;
+      signOutUser();
+      this.closeHeaderPopover();
+    };
+
+
+    render() {
+      const {userData} = this.props;
+      return (
+        <HeaderView
+          userData={userData}
+          popoverRef={this.popoverRef}
+          closeHeaderPopover={this.closeHeaderPopover}
+          signOutHandler={this.signOutHandler}
+        />
+      );
+    }
 }
 
-export default HeaderContainer;
+const mapStateToProps = ({userData}) => ({
+  userData: userData.userData,
+});
+const mapDispatchToProps = {
+  signOutUser: signOutUserAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderContainer);
