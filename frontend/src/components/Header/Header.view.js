@@ -34,6 +34,9 @@ const logoWrapper = css({
   borderRadius: '50%',
   margin: '0 10px',
   cursor: 'pointer',
+  '&:hover': {
+    cursor: 'pointer',
+  },
 });
 const forgotPasswordLink = css({
   display: 'inline-block',

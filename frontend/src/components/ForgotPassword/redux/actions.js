@@ -13,8 +13,9 @@ export const restorePasswordStart = () => ({
   type: RESTORE_PASSWORD_PENGING,
 });
 
-export const restorePasswordSuccess = () => ({
+export const restorePasswordSuccess = (userData) => ({
   type: AUTH_SUCCESS,
+  payload: userData,
 });
 
 export const restorePasswordFail = (error) => ({

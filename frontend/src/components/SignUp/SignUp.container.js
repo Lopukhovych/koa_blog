@@ -1,14 +1,13 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 
-import {checkValidity, updateObject} from 'src/utils/formUtils';
-
 import {signUpUser as signUpUserAction} from 'src/components/SignUp/redux/actions';
+import {
+  passwordControl,
+  confirmPasswordControl,
+  updateFormControlsHandler,
+} from 'src/core/formHandler.helper';
 import SignUpView from './SignUp.view';
-
-const passwordControl = 'password';
-const confirmPasswordControl = 'confirmPassword';
-
 
 class SignUpContainer extends PureComponent {
   constructor(props) {
@@ -26,7 +25,7 @@ class SignUpContainer extends PureComponent {
             required: true,
           },
           valid: false,
-          errorMessage: 'Should contain only a-z, A-Z, 0-9, ._, and one "@"',
+          errorMessage: 'Enter your name!',
           touched: false,
         },
         email: {
@@ -106,63 +105,10 @@ class SignUpContainer extends PureComponent {
     return {errorMessage: null};
   }
 
-  checkPasswordConfirmation = (value, controlName) => {
-    const {controls} = this.state;
-    if (controlName === confirmPasswordControl) {
-      const updatedControlName = updateObject(controls[controlName], {
-        value,
-        valid: checkValidity(value, controls[controlName].validation) && controls[passwordControl].value === value,
-        touched: true,
-      });
-      return updateObject(controls, {[controlName]: updatedControlName});
-    }
-    if (!controls[confirmPasswordControl].touched) {
-      const updatedControlName = updateObject(controls[controlName], {
-        value,
-        valid: checkValidity(value, controls[controlName].validation),
-        touched: true,
-      });
-      return updateObject(controls, {[controlName]: updatedControlName});
-    }
-    const updatedPassword = updateObject(controls[controlName], {
-      value,
-      valid: checkValidity(value, controls[controlName].validation),
-      touched: true,
-    });
-
-    const updateConfirmationPassword = updateObject(controls[confirmPasswordControl], {
-      valid: controls[confirmPasswordControl].value === updatedPassword.value,
-      touched: true,
-    });
-    return updateObject(controls, {
-      [controlName]: updatedPassword,
-      [confirmPasswordControl]: updateConfirmationPassword,
-    });
-  };
-
   changeFormValueHandler = (value, controlName) => {
     const {controls} = this.state;
-    let updatedControls;
-    if (![confirmPasswordControl, passwordControl].includes(controlName)) {
-      const updatedControlName = updateObject(controls[controlName], {
-        value,
-        valid: checkValidity(value, controls[controlName].validation),
-        touched: true,
-      });
-      updatedControls = updateObject(controls, {
-        [controlName]: updatedControlName,
-      });
-    } else {
-      updatedControls = this.checkPasswordConfirmation(value, controlName);
-    }
 
-    let formIsValid = true;
-
-    Object.values(updatedControls).forEach((item) => {
-      formIsValid = item.valid && formIsValid;
-    });
-
-    this.setState({controls: updatedControls, formIsValid});
+    this.setState(updateFormControlsHandler(value, controlName, controls));
   };
 
   submitFormHandler = (e) => {

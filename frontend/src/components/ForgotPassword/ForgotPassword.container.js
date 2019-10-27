@@ -1,11 +1,12 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
-import {checkValidity, updateObject} from 'src/utils/formUtils';
+import {
+  passwordControl,
+  confirmPasswordControl,
+  updateFormControlsHandler,
+} from 'src/core/formHandler.helper';
 import {restorePassword as restorePasswordAction} from './redux/actions';
 import ForgotPasswordView from './ForgotPassword.view';
-
-const passwordControl = 'password';
-const confirmPasswordControl = 'confirmPassword';
 
 class ForgotPasswordContainer extends PureComponent {
   constructor(props) {
@@ -79,114 +80,62 @@ class ForgotPasswordContainer extends PureComponent {
     };
   }
 
-  static getDerivedStateFromProps(props) {
-    if (props.restorePasswordError) {
-      if (props.restorePasswordError.code === 401) {
+  static getDerivedStateFromProps(nextProp) {
+    const {restorePasswordError} = nextProp;
+    if (restorePasswordError) {
+      if (restorePasswordError.code === 401) {
         return {errorMessage: 'Email is not correct or secretWord field was empty!'};
       }
-      if (props.restorePasswordError.code === 403) {
+      if (restorePasswordError.code === 403) {
         return {errorMessage: 'Authorization error! Check credentials and try later.'};
       }
     }
-    if (props.restorePasswordError) {
+    if (restorePasswordError) {
       return {errorMessage: 'Something went wrong! Check credentials or contact us!'};
     }
     return {errorMessage: null};
   }
 
-    checkPasswordConfirmation = (value, controlName) => {
-      const {controls} = this.state;
-      if (controlName === confirmPasswordControl) {
-        const updatedControlName = updateObject(controls[controlName], {
-          value,
-          valid: checkValidity(value, controls[controlName].validation) && controls[passwordControl].value === value,
-          touched: true,
-        });
-        return updateObject(controls, {[controlName]: updatedControlName});
-      }
-      if (!controls[confirmPasswordControl].touched) {
-        const updatedControlName = updateObject(controls[controlName], {
-          value,
-          valid: checkValidity(value, controls[controlName].validation),
-          touched: true,
-        });
-        return updateObject(controls, {[controlName]: updatedControlName});
-      }
-      const updatedPassword = updateObject(controls[controlName], {
-        value,
-        valid: checkValidity(value, controls[controlName].validation),
-        touched: true,
+  changeFormValueHandler = (value, controlName) => {
+    const {controls} = this.state;
+
+    this.setState(updateFormControlsHandler(value, controlName, controls));
+  };
+
+  submitFormHandler = (e) => {
+    e.preventDefault();
+    const {controls, formIsValid} = this.state;
+    const {restorePassword} = this.props;
+    if (formIsValid) {
+      const formValues = {};
+      Object.keys(controls).forEach((key) => {
+        if (key !== confirmPasswordControl) {
+          formValues[key] = controls[key].value;
+        }
       });
-
-      const updateConfirmationPassword = updateObject(controls[confirmPasswordControl], {
-        valid: controls[confirmPasswordControl].value === updatedPassword.value,
-        touched: true,
-      });
-
-      return updateObject(controls, {
-        [controlName]: updatedPassword,
-        [confirmPasswordControl]: updateConfirmationPassword,
-      });
-    };
-
-    changeFormValueHandler = (value, controlName) => {
-      const {controls} = this.state;
-      let updatedControls;
-      if (![confirmPasswordControl, passwordControl].includes(controlName)) {
-        const updatedControlName = updateObject(controls[controlName], {
-          value,
-          valid: checkValidity(value, controls[controlName].validation),
-          touched: true,
-        });
-        updatedControls = updateObject(controls, {
-          [controlName]: updatedControlName,
-        });
-      } else {
-        updatedControls = this.checkPasswordConfirmation(value, controlName);
-      }
-
-      let formIsValid = true;
-
-      Object.values(updatedControls).forEach((item) => {
-        formIsValid = item.valid && formIsValid;
-      });
-
-      this.setState({controls: updatedControls, formIsValid});
-    };
-
-    submitFormHandler = (e) => {
-      e.preventDefault();
-      const {controls, formIsValid} = this.state;
-      const {restorePassword} = this.props;
-      if (formIsValid) {
-        const formValues = {};
-        Object.keys(controls).forEach((key) => {
-          if (key !== confirmPasswordControl) {
-            formValues[key] = controls[key].value;
-          }
-        });
-        restorePassword(formValues);
-      }
-    };
-
-    render() {
-      const {controls, formIsValid, errorMessage} = this.state;
-      return (
-        <div>
-          <ForgotPasswordView
-            controls={controls}
-            formIsValid={formIsValid}
-            changeFormValueHandler={this.changeFormValueHandler}
-            submitFormHandler={this.submitFormHandler}
-            errorMessage={errorMessage}
-          />
-        </div>
-      );
+      restorePassword(formValues);
     }
+  };
+
+  render() {
+    const {controls, formIsValid, errorMessage} = this.state;
+    return (
+      <div>
+        <ForgotPasswordView
+          controls={controls}
+          formIsValid={formIsValid}
+          changeFormValueHandler={this.changeFormValueHandler}
+          submitFormHandler={this.submitFormHandler}
+          errorMessage={errorMessage}
+        />
+      </div>
+    );
+  }
 }
 
-const mapStateToProps = ({forgotPassword}) => ({
+const mapStateToProps = ({forgotPassword, userData}) => ({
   restorePasswordError: forgotPassword.error,
+  userData: userData.userData,
 });
 
 const mapDispatchToProps = {

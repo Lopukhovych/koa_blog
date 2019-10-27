@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
-import {checkValidity, updateObject} from 'src/utils/formUtils';
+import {passwordControl, updateFormControlsHandler} from 'src/core/formHandler.helper';
 import LoginView from './Login.view';
 import {loginUser as loginUserAction} from './redux/actions';
 
@@ -25,7 +25,7 @@ class LoginContainer extends PureComponent {
           errorMessage: 'Should contain only a-z, A-Z, 0-9, ._, and one "@"',
           touched: false,
         },
-        password: {
+        [passwordControl]: {
           elementType: 'input',
           elementConfig: {
             type: 'password',
@@ -57,22 +57,8 @@ class LoginContainer extends PureComponent {
 
   changeFormValueHandler = (value, controlName) => {
     const {controls} = this.state;
-    const updatedControlName = updateObject(controls[controlName], {
-      value,
-      valid: checkValidity(value, controls[controlName].validation),
-      touched: true,
 
-    });
-    const updatedControls = updateObject(controls, {
-      [controlName]: updatedControlName,
-    });
-    let formIsValid = true;
-
-    Object.values(updatedControls).forEach((item) => {
-      formIsValid = item.valid && formIsValid;
-    });
-
-    this.setState({controls: updatedControls, formIsValid});
+    this.setState(updateFormControlsHandler(value, controlName, controls));
   };
 
     submitFormHandler = (e) => {
