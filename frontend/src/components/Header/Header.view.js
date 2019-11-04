@@ -2,28 +2,27 @@
 import {css, jsx} from '@emotion/core';
 import {Link} from 'react-router-dom';
 import {
-  Navbar, Nav, Form, FormControl, Button, OverlayTrigger, Popover, Image,
+  Navbar, Nav, Form, FormControl, Button, OverlayTrigger, Popover,
 } from 'react-bootstrap';
 import LoginContainer from 'src/components/Login';
 
 import {mq, smallDesktop} from 'src/core/styles';
 import { FaUser } from 'react-icons/fa';
-import logo from './koa_blog_logo.svg';
 
-const logoStyle = css({
+const logoStyles = css({
   height: '40px',
   [mq[smallDesktop]]: {
     height: '38px',
   },
 });
-const popoverStyle = css({
+const popoverStyles = css({
   marginTop: '8px',
   width: '218px',
   '.arrow': {
     display: 'none',
   },
 });
-const logoWrapper = css({
+const logoWrapperStyles = css({
   color: 'rgb(255, 255, 255)',
   height: '40px',
   width: '40px',
@@ -38,18 +37,18 @@ const logoWrapper = css({
     cursor: 'pointer',
   },
 });
-const forgotPasswordLink = css({
+const forgotPasswordLinkStyles = css({
   display: 'inline-block',
   marginTop: '4px',
   fontSize: '13px',
 });
 
 const HeaderView = ({
-  popoverRef, closeHeaderPopover, userData, signOutHandler,
+  popoverRef, closeHeaderPopover, userData, signOutHandler, headerLogo,
 }) => (
   <Navbar bg="light" variant="light">
     <Navbar.Brand as={Link} to="/">
-      <img css={logoStyle} src={logo} alt="koa_blog" />
+      <img css={logoStyles} src={headerLogo} alt="koa_blog" />
     </Navbar.Brand>
     <Nav className="mr-auto">
       <Nav.Link as={Link} to="/">Home</Nav.Link>
@@ -71,7 +70,7 @@ const HeaderView = ({
           rootClose
           ref={popoverRef}
           overlay={(
-            <Popover id="login-popover" css={popoverStyle}>
+            <Popover id="login-popover" css={popoverStyles}>
               <Popover.Title as="h3">Profile</Popover.Title>
               <Popover.Content>
                 <p>
@@ -104,7 +103,7 @@ const HeaderView = ({
             </Popover>
           )}
         >
-          <div css={logoWrapper}>
+          <div css={logoWrapperStyles}>
             <FaUser />
           </div>
         </OverlayTrigger>
@@ -117,7 +116,7 @@ const HeaderView = ({
           rootClose
           ref={popoverRef}
           overlay={(
-            <Popover id="login-popover" css={popoverStyle}>
+            <Popover id="login-popover" css={popoverStyles}>
               <Popover.Title as="h3">Log In</Popover.Title>
               <Popover.Content>
                 <LoginContainer />
@@ -134,7 +133,7 @@ const HeaderView = ({
                 <br />
                 <Link
                   onClick={closeHeaderPopover}
-                  css={forgotPasswordLink}
+                  css={forgotPasswordLinkStyles}
                   to="/auth/forgot"
                 >
                   Forgot password?

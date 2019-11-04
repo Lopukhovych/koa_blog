@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import {css, jsx} from '@emotion/core';
-import React from 'react';
 import {
   Button,
   Card, Col, Container, Form, Row,

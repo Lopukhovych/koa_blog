@@ -19,11 +19,12 @@
     "react-router-dom": "5.1.2",
     "react-router-redux": "4.0.8",
     "react-scripts": "3.1.2",
+    "react-slick": "^0.25.2",
     "redux": "4.0.4",
     "redux-saga": "^1.1.1",
     "reselect": "^4.0.0",
     "save": "^2.4.0",
-    "save-dev": "0.0.1-security"
+    "slick-carousel": "^1.8.1"
   },
   "scripts": {
     "start": "NODE_PATH=. react-scripts start",

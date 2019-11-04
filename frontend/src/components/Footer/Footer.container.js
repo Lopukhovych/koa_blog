@@ -1,13 +1,26 @@
-/** @jsx jsx */
-import {css, jsx } from '@emotion/core';
+import React, {PureComponent} from 'react';
+import {categoryList, subscribeInfo} from 'src/MockedData/footer.mocked';
 
-const footerStyle = css({
-  flexShrink: 0,
-});
-const FooterContainer = () => (
-  <div css={footerStyle}>
-    <h2>Footer</h2>
-  </div>
-);
+import logo from 'src/assert/img/koa_blog_logo.svg';
+import FooterView from './Footer.view';
+
+class FooterContainer extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.fullYear = new Date().getFullYear();
+    console.log('render_footer: ');
+  }
+
+  render() {
+    return (
+      <FooterView
+        categoryList={categoryList}
+        subscribeInfo={subscribeInfo}
+        fullYear={this.fullYear}
+        footerLogo={logo}
+      />
+    );
+  }
+}
 
 export default FooterContainer;
