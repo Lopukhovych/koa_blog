@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {getStorageItem} from 'src/utils/others';
 import {initializeUser as initializeUserAction} from './redux/actions';

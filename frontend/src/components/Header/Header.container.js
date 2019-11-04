@@ -2,6 +2,8 @@ import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {signOutUser as signOutUserAction} from 'src/core/redux/actions';
 
+import logo from 'src/assert/img/koa_blog_logo.svg';
+
 import HeaderView from './Header.view';
 
 class HeaderContainer extends PureComponent {
@@ -33,6 +35,7 @@ class HeaderContainer extends PureComponent {
           popoverRef={this.popoverRef}
           closeHeaderPopover={this.closeHeaderPopover}
           signOutHandler={this.signOutHandler}
+          headerLogo={logo}
         />
       );
     }

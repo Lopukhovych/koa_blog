@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import {css, jsx} from '@emotion/core';
-import {Route, Switch} from 'react-router';
+import {Route, Switch, Redirect} from 'react-router';
 import {ConnectedRouter} from 'connected-react-router';
 
 import {history} from 'src/config/configureStore';
@@ -23,12 +23,15 @@ import {mq, smallDesktop} from 'src/core/styles';
 import './App.css';
 
 const rootStyles = css({
-  height: '100%',
+  minHeight: '100%',
   display: 'flex',
+  flexGrow: 1,
   flexDirection: 'column',
+  alignItems: 'stretch',
   maxWidth: '1180px',
   margin: '0 auto',
   overflow: 'hidden',
+
   [mq[smallDesktop]]: {
     // background: 'red',
   },
@@ -36,6 +39,7 @@ const rootStyles = css({
 
 const mainStyle = css({
   flex: '1 0 auto',
+  margin: '8px 0 22px',
 });
 
 function App() {
@@ -47,6 +51,7 @@ function App() {
           <main css={mainStyle}>
             <Switch>
               <Route exact path="/" component={HomeContainer} />
+              <Redirect exact path="/home" to="/" />
               <Route path="/author" component={AuthorContainer} />
               <Route path="/article" component={ArticleContainer} />
               <Route path="/category" component={CategoryContainer} />
@@ -54,7 +59,8 @@ function App() {
               <Route path="/contact_us" component={ContactUsContainer} />
               <Route path="/auth" component={AuthorizationContainer} />
               <Route path="/myprofile" component={MyProfileContainer} />
-              <Route path="*" component={NotFoundContainer} />
+              <Route path="/not-fount" component={NotFoundContainer} />
+              <Redirect from="*" to="/not-found" />
             </Switch>
           </main>
           <Footer />
