@@ -1,32 +1,32 @@
-'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Users = sequelize.define('Users', {
+    email: DataTypes.STRING,
     roleId: DataTypes.INTEGER,
     status: DataTypes.STRING,
     password: DataTypes.STRING,
     secretWord: DataTypes.STRING,
-    userInfo: DataTypes.JSONB
+    userInfo: DataTypes.JSONB,
   }, {
-    freezeTableName: true
+    freezeTableName: true,
   });
-  Users.associate = function (models) {
+  Users.associate = (models) => {
     Users.hasMany(models.Post, {
       foreignKey: 'userId',
       as: 'posts',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
     });
 
     Users.hasMany(models.Comment, {
       foreignKey: 'userId',
       as: 'comments',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
     });
 
     Users.belongsTo(models.Role, {
       foreignKey: 'roleId',
       as: 'role',
-      onDelete: 'CASCADE'
-    })
+      onDelete: 'CASCADE',
+    });
   };
   return Users;
 };

@@ -10,9 +10,6 @@ module.exports = {
         if (tableDefinition.name) {
           migrations.push(queryInterface.removeColumn('Users', 'name'));
         }
-        if (tableDefinition.email) {
-          migrations.push(queryInterface.removeColumn('Users', 'email'))
-        }
         if (!tableDefinition.status) {
           migrations.push(queryInterface.addColumn('Users', 'status', Sequelize.STRING));
         }
@@ -49,9 +46,6 @@ module.exports = {
       .then(tableDefinition => {
         if (!tableDefinition.name) {
           migrations.push(queryInterface.addColumn('Users', 'name', {type: Sequelize.STRING}));
-        }
-        if (!tableDefinition.email) {
-          migrations.push(queryInterface.addColumn('Users', 'email', {type: Sequelize.STRING}));
         }
         if (tableDefinition.status) {
           migrations.push(queryInterface.removeColumn('Users', 'status'));
