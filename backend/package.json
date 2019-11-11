@@ -7,8 +7,14 @@
     "start": "NODE_PATH=. nodemon src/server.js",
     "test": "mocha"
   },
+  "engines": {
+    "node": ">=8.10.0"
+  },
   "author": "volod34",
   "license": "ISC",
+  "eslintConfig": {
+    "extends": "eslint:recommended"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.1.0",
@@ -27,6 +33,9 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
     "mocha": "^6.2.1",
     "nodemon": "^1.19.2"
   }
