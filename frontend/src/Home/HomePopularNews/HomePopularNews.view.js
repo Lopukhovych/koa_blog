@@ -5,17 +5,19 @@ import {Card, Container, Row} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 
 const smallArticleStyles = css({
-  height: '13%',
-  maxHeight: '75px',
+  height: '20%',
+  maxHeight: '100px',
+  margin: '2px 0',
+  padding: '0 2px',
 
   '& .article': {
-    padding: '5px',
+    padding: '10px',
     height: '100%',
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'start',
     position: 'relative',
-    paddingLeft: '120px',
+    paddingLeft: '128px',
     cursor: 'pointer',
     flexDirection: 'column',
   },
@@ -61,7 +63,7 @@ const smallArticleStyles = css({
   '& .article-meta': {
     'list-style-type': 'none',
     position: 'absolute',
-    bottom: '1px',
+    bottom: '8px',
     right: '0',
     display: 'flex',
     justifyContent: 'space-between',
@@ -161,7 +163,7 @@ const allPopularArticleLink = css({
 });
 
 const HomePopularNewsView = ({ articleList}) => {
-  const popularArticles = articleList.filter((elem, index) => index < 8).map((article, articleIndex) => (
+  const popularArticles = articleList.filter((elem, index) => index < 6).map((article, articleIndex) => (
     <Card
       key={article.id}
       className={articleIndex === 0 ? 'col-7' : 'align-self-stretch'}
