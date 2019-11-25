@@ -210,5 +210,5 @@ async function restorePassword(ctx) {
 }
 
 module.exports = {
-  auth, initialize, login, signup, restorePassword, badRequest, getUserByEmail, createUser,
+  auth, initialize, login, signup, restorePassword, badRequest, getUserByEmail, createUser, getUserById,
 };

@@ -32,4 +32,15 @@ async function post_delete(ctx) {
     ctx.body = {deleted: true};
 }
 
-module.exports = {post_list, post_detail, post_create, post_update, post_delete};
+async function getPostById(id) {
+  try {
+    return models.Post.findOne({ where: { id }, raw: true });
+  } catch (error) {
+    console.error('getPostById error: ', error.message);
+    return error;
+  }
+}
+
+module.exports = {
+  post_list, post_detail, post_create, post_update, post_delete, getPostById,
+};
