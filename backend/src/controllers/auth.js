@@ -85,7 +85,7 @@ async function auth(ctx, next) {
 
 async function initialize(ctx) {
   try {
-    const {token} = ctx.request.body;
+    const { token } = ctx.request.body;
     const verified = await jwtAuth.verify(token);
     if (!verified) {
       return setUnauthorized(ctx);
@@ -146,15 +146,17 @@ async function signup(ctx, next) {
     };
   }
   const emailStr = email.toString();
+  const userRole = await models.Role.findOne({ where: { title: userRoles.user }, raw: true });
   const userData = {
     email: emailStr,
     password: await bcrypt.hash(password, 8),
     secretWord: secretWord && await bcrypt.hash(secretWord, 10),
     status: userStatus.active,
-    roleId: userRoles.user,
+    roleId: +userRole.id,
     userInfo,
   };
   const user = await getUserByEmail(emailStr);
+
   if (!user) {
     const result = await createUser(userData);
     if (result) {
@@ -175,7 +177,7 @@ async function signup(ctx, next) {
 
 async function restorePassword(ctx) {
   try {
-    const {email, secretWord: enteredSecretWord, password: newPassword} = ctx.request.body;
+    const { email, secretWord: enteredSecretWord, password: newPassword } = ctx.request.body;
     const user = await models.Users.findOne({ where: { email } });
 
     if (!user || !enteredSecretWord) {
@@ -187,10 +189,10 @@ async function restorePassword(ctx) {
 
     if (compared && !comparedPass) {
       const updatedPassword = await bcrypt.hash(newPassword, 8);
-      const updatedUser = await user.update({password: updatedPassword});
+      const updatedUser = await user.update({ password: updatedPassword });
 
       if (updatedUser) {
-        const {password, secredWord, ...userInfoWithoutPassword} = updatedUser.toJSON();
+        const { password, secredWord, ...userInfoWithoutPassword } = updatedUser.toJSON();
         const token = await jwtAuth.sign({ ...userInfoWithoutPassword });
         const userInfo = await getResponseUserInfo(userInfoWithoutPassword);
 
@@ -208,5 +210,5 @@ async function restorePassword(ctx) {
 }
 
 module.exports = {
-  auth, initialize, login, signup, restorePassword, badRequest,
+  auth, initialize, login, signup, restorePassword, badRequest, getUserByEmail, createUser,
 };
