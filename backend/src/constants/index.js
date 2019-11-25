@@ -4,15 +4,24 @@ const userStatus = {
   disable: 'disable',
 };
 
+const articleStatus = {
+  created: 'created',
+  inReview: 'in review',
+  toRefactor: 'to refactor',
+  published: 'published',
+  deleted: 'deleted',
+};
+
 const userRoles = {
-  user: 1,
-  author: 2,
-  moderator: 3,
-  admin: 4,
+  user: 'user',
+  author: 'author',
+  moderator: 'moderator',
+  admin: 'admin',
 };
 
 
 module.exports = {
   userStatus,
   userRoles,
+  articleStatus,
 };
