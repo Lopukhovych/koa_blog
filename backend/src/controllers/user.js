@@ -13,7 +13,7 @@ async function getUserList(ctx) {
 async function getUserDetails(ctx) {
   try {
     const {
-      id, email, status, userInfo, createdAt, roleId, ...args
+      id, email, status, userInfo, createdAt, roleId,
     } = await models.Users.findOne({ where: { id: ctx.params.id } });
     const { title: userRole } = await models.Role.findOne({ where: { id: +roleId } });
 
@@ -175,6 +175,26 @@ async function userDelete(ctx) {
   ctx.body = { deleted: true };
 }
 
+async function getActiveUserList() {
+  models.Users.findAll({
+    attributes: ['id', 'email', 'roleId', 'status', 'userInfo'],
+    where: Sequelize.and(
+      { status: userStatus.active },
+    ),
+    raw: true,
+  });
+}
+
+async function getShortActiveUserInfo() {
+  return models.Users.findAll({
+    attributes: ['id', 'email', 'userInfo'],
+    where: Sequelize.and(
+      { status: userStatus.active },
+    ),
+    raw: true,
+  }).map(({id, email, userInfo}) => ({id, email, name: userInfo.name}));
+}
+
 module.exports = {
-  getUserList, getUserDetails, userCreate, userUpdate, userDelete,
+  getUserList, getUserDetails, userCreate, userUpdate, userDelete, getActiveUserList, getShortActiveUserInfo,
 };

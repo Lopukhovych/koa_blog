@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 
-const comments = require('./comments');
 const post = require('./post');
+const comments = require('./comments');
 const auth = require('./auth');
 const user = require('./user');
 

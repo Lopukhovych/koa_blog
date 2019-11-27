@@ -1,5 +1,5 @@
 const models = require('models');
-const { auth, badRequest } = require('src/controllers/auth');
+const { auth, setBadRequest } = require('../controllers/auth');
 const {getUserById} = require('./auth');
 const {getPostById} = require('./post');
 
@@ -10,7 +10,7 @@ async function commentList(ctx, next) {
     ctx.status = 200;
     ctx.body = { comments };
   } catch (error) {
-    badRequest(ctx, error);
+    setBadRequest(ctx, error);
   }
 }
 
@@ -61,6 +61,26 @@ async function commentDelete(ctx) {
   ctx.body = { deleted: true };
 }
 
+async function getCommentListToPost(postId) {
+  const comments = await models.Comment
+    .findAll({
+      attributes: [
+        'id',
+        'comment',
+        'createdAt',
+      ],
+      where: { postId },
+      include: {
+        model: models.Users,
+        attributes: ['id', 'email'],
+        required: false,
+        as: 'author',
+      },
+      raw: true,
+    });
+  return comments;
+}
+
 module.exports = {
-  commentList, commentDetail, commentUpdate, commentCreate, commentDelete,
+  commentList, commentDetail, commentUpdate, commentCreate, commentDelete, getCommentListToPost,
 };

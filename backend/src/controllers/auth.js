@@ -1,10 +1,10 @@
 const bcrypt = require('bcryptjs');
-const models = require('../../models/index');
+const models = require('models/index');
 const jwtAuth = require('../auth/index');
 
 const { userStatus, userRoles } = require('../constants');
 
-async function badRequest(ctx, error) {
+async function setBadRequest(ctx, error) {
   ctx.status = 400;
   ctx.body = {
     originalError: 'Bad Request',
@@ -210,5 +210,5 @@ async function restorePassword(ctx) {
 }
 
 module.exports = {
-  auth, initialize, login, signup, restorePassword, badRequest, getUserByEmail, createUser, getUserById,
+  auth, initialize, login, signup, restorePassword, setBadRequest, getUserByEmail, createUser, getUserById,
 };
