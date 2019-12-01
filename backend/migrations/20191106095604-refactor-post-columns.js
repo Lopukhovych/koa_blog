@@ -5,7 +5,7 @@ module.exports = {
     const refactorPosts = (transaction) => queryInterface.describeTable(tableName)
       .then((tableDefinition) => {
         if (!tableDefinition.publishedDate) {
-          migrations.push(queryInterface.addColumn('Posts', 'publishedDate', Sequelize.DATEONLY, { transaction }));
+          migrations.push(queryInterface.addColumn('Posts', 'publishedDate', Sequelize.DATE, { transaction }));
         }
         if (!tableDefinition.status) {
           migrations.push(queryInterface.addColumn('Posts', 'status', Sequelize.STRING, { transaction }));
