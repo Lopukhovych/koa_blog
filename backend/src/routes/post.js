@@ -1,10 +1,10 @@
 const postController = require('../controllers/post');
 
 module.exports = (router) => {
-    router.get('/post', postController.post_list);
-    router.get('/post/:id', postController.post_detail);
-    router.post('/post', postController.post_create);
-    router.put('/post/:id', postController.post_update);
-    router.del('/post/:id', postController.post_delete);
-    return router;
+  router.get('/post', postController.postList);
+  router.get('/post/:id', postController.postDetail);
+  router.post('/post', postController.postCreate);
+  router.put('/post/:id', postController.postUpdate);
+  router.del('/post/:id', postController.postDelete);
+  return router;
 };

@@ -1,37 +1,200 @@
-const models = require("../../models/index");
+const Sequelize = require('sequelize');
+const bcrypt = require('bcryptjs');
+const models = require('models/index');
+const { userStatus, userRoles } = require('../constants');
+const { getUserByEmail, createUser } = require('./auth');
 
-async function user_list(ctx) {
-    const user_list = await models.Users.findAll();
-    ctx.body = {user_list};
+const {Op} = Sequelize;
+async function getUserList(ctx) {
+  const userList = await models.Users.findAll();
+  ctx.body = { userList };
 }
 
-async function user_detail(ctx) {
+async function getUserDetails(ctx) {
+  try {
+    const {
+      id, email, status, userInfo, createdAt, roleId,
+    } = await models.Users.findOne({ where: { id: ctx.params.id } });
+    const { title: userRole } = await models.Role.findOne({ where: { id: +roleId } });
+
+    ctx.body = {
+      id,
+      email,
+      status,
+      createdAt,
+      role: userRole,
+      ...userInfo,
+    };
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+async function userCreate(ctx) {
+  const {
+    email,
+    role,
+    status,
+    password,
+    secretWord,
+    age,
+    name,
+  } = ctx.request.body;
+  if (!password || !email) {
+    ctx.status = 400;
+    ctx.body = {
+      error: 'email and password are required!',
+    };
+  }
+  const emailStr = email.toString();
+
+  const userRole = await models.Role.findOne({ where: { title: userRoles.user }, raw: true });
+  let enteredRole = null;
+  if (role) {
     try {
-        const user = await models.Users.findOne({where: {id: ctx.params.id}});
-        console.log('user: ', user);
-        ctx.body = user;
-    } catch (error) {
-        console.log(error.message);
+      enteredRole = await models.Role.findOne({ where: { title: role.toString() }, raw: true });
+    } catch (err) {
+      console.error(`Role ${role} does not exist`);
     }
+  }
+  const userData = {
+    email: emailStr,
+    password: await bcrypt.hash(password, 8),
+    secretWord: secretWord && await bcrypt.hash(secretWord, 10),
+    status: userStatus.pending || userStatus[status],
+    roleId: enteredRole ? enteredRole.id : userRole.id,
+    userInfo: {
+      age,
+      name,
+    },
+  };
+  const user = await getUserByEmail(emailStr);
+  if (!user) {
+    try {
+      const newUser = await createUser(userData);
+      ctx.status = 200;
+      ctx.body = {
+        message: 'success',
+        newUserId: newUser.id,
+      };
+    } catch (err) {
+      ctx.status = 400;
+      ctx.body = {
+        error: 'Error in user creating process',
+      };
+    }
+  } else {
+    ctx.status = 406;
+    ctx.body = {
+      error: 'User with such email already exist',
+    };
+  }
 }
 
-async function user_create(ctx) {
-    const requestBody = ctx.request.body;
-    ctx.status = 200;
-    ctx.body = await models.Users.create(requestBody.comment);
+async function userUpdate(ctx) {
+  const user = await models.Users.findOne({ where: { id: +ctx.params.id } });
+  const {
+    email,
+    role,
+    status,
+    password,
+    secretWord,
+    age,
+    name,
+  } = ctx.request.body;
+  let enteredRole = null;
+
+  if (role) {
+    try {
+      enteredRole = await models.Role.findOne({ where: { title: role.toString() }, raw: true });
+      if (!enteredRole) {
+        ctx.status = 400;
+        ctx.body = {
+          error: `Role ${role} foes not exist`,
+        };
+        return;
+      }
+    } catch (err) {
+      ctx.status = 400;
+      ctx.body = {
+        error: `Error with updating role ${err.toString()}`,
+      };
+      return;
+    }
+  }
+
+  const userData = {
+    email,
+    password: password && await bcrypt.hash(password, 8),
+    secretWord: secretWord && await bcrypt.hash(secretWord, 10),
+    status: userStatus.pending || userStatus[status],
+    roleId: role && enteredRole && enteredRole.id,
+    userInfo: {
+      age,
+      name,
+    },
+  };
+
+  const userByEmail = await models.Users.findOne({
+    where: Sequelize.and(
+      { email },
+      {
+        id: {
+          [Op.not]: user.id,
+        },
+      },
+    ),
+    raw: true,
+  });
+
+  if (!userByEmail) {
+    try {
+      const newUser = await user.update(userData);
+      ctx.status = 200;
+      ctx.body = {
+        message: 'success',
+        id: newUser.id,
+      };
+    } catch (err) {
+      ctx.status = 400;
+      ctx.body = {
+        error: `Error in user updating process ${err.toString()}`,
+      };
+    }
+  } else {
+    ctx.status = 406;
+    ctx.body = {
+      error: 'User with such email already exist',
+    };
+  }
 }
 
-async function user_update(ctx) {
-    let user = await models.Users.findOne({where: {id: ctx.params.id}});
-    user = await user.update(ctx.request.body.user);
-    ctx.body = {user};
+async function userDelete(ctx) {
+  const user = await models.Users.findOne({ where: { id: ctx.params.id } });
+  await user.destroy();
+  ctx.body = { deleted: true };
 }
 
-async function user_delete(ctx) {
-    let user = await models.Users.findOne({where: {id: ctx.params.id}});
-    await user.destroy();
-    ctx.body = {deleted: true};
+async function getActiveUserList() {
+  models.Users.findAll({
+    attributes: ['id', 'email', 'roleId', 'status', 'userInfo'],
+    where: Sequelize.and(
+      { status: userStatus.active },
+    ),
+    raw: true,
+  });
 }
 
-module.exports = {user_list, user_detail, user_create, user_update, user_delete};
+async function getShortActiveUserInfo() {
+  return models.Users.findAll({
+    attributes: ['id', 'email', 'userInfo'],
+    where: Sequelize.and(
+      { status: userStatus.active },
+    ),
+    raw: true,
+  }).map(({id, email, userInfo}) => ({id, email, name: userInfo.name}));
+}
 
+module.exports = {
+  getUserList, getUserDetails, userCreate, userUpdate, userDelete, getActiveUserList, getShortActiveUserInfo,
+};
