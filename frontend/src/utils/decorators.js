@@ -28,6 +28,7 @@ const parseResultDecorator = (requestFunc) => async (...args) => {
 };
 
 const composeUrlDecorator = (requestFunc) => async (...args) => {
+  console.log('composeUrlDecorator: ', args, requestFunc);
   const absoluteUrl = `http://localhost:3200${args[0]}`;
   // const ags = [...args, absoluteUrl]
   args[0] = absoluteUrl;
@@ -71,10 +72,24 @@ const requestCachingDecorator = (cacheMap) => (requestFunc) => async (...args) =
   return res;
 };
 
+const objectToQueryString = async (obj) => Object.keys(obj).map((key) => `${key}=${obj[key]}`).join('&');
+
+
+const baseGetDecorator = (requestFunc) => async (...args) => {
+  if (!args[1].method || args[1].method.toUpperCase() === 'GET') {
+    if (args[1].queryParams) {
+      const queryParams = await objectToQueryString(args[1].queryParams);
+      args[0] = `${args[0]}?${queryParams}`;
+    }
+  }
+  return requestFunc.call(null, ...args);
+};
+
 export {
   timeoutPromiseDecorator,
   parseResultDecorator,
   requestCachingDecorator,
   composeUrlDecorator,
   baseHeadersDecorator,
+  baseGetDecorator,
 };

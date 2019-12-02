@@ -5,6 +5,10 @@ import Slider from 'react-slick';
 import {Container} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 
+const homeSliderWrapperStyles = css({
+  marginBottom: '12px',
+});
+
 const sectionTitleStyles = css({
   position: 'relative',
   marginBottom: '12px',
@@ -121,7 +125,7 @@ const HomeSliderView = ({categoryList, settings}) => {
     </div>
   ));
   return (
-    <Container fluid>
+    <Container fluid css={homeSliderWrapperStyles}>
       <h2>Categories</h2>
       <Slider {...settings}>
         {selectCategoryList}
