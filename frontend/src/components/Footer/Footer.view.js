@@ -79,6 +79,12 @@ const categoryWidgetStyles = css({
   },
 });
 
+const footerCopyrightStyles = css({
+  fontSize: '12px',
+  color: '#757575',
+  textAlign: 'right',
+});
+
 const FooterView = ({
   categoryList, subscribeInfo, fullYear, footerLogo,
 }) => {
@@ -122,24 +128,25 @@ const FooterView = ({
           </Col>
         </Row>
         <Row className="align-items-center">
-          <div className="offset-md-1 col-md-6 col-md-push-6">
+          <div className="offset-md-1 col-md-7 col-md-push-7">
             <Nav className="mr-auto">
               <Nav.Link as={Link} to="/">Home</Nav.Link>
               <Nav.Link as={Link} to="/category">Categories</Nav.Link>
               <Nav.Link as={Link} to="/about_us">About us</Nav.Link>
-              <Nav.Link as={Link} to="/contact_us">Contacts</Nav.Link>
+              <Nav.Link as={Link} to="/contact_us">Contact Us</Nav.Link>
+              <Nav.Link as={Link} to="/contacts">Contacts</Nav.Link>
               <Nav.Link as={Link} to="/contact_us">Privacy</Nav.Link>
             </Nav>
           </div>
           <div className="col-md-4 col-md-pull-4">
-            <div className="footer-copyright">
+            <p css={footerCopyrightStyles}>
                             Copyright &copy;
               {' '}
               {fullYear}
               {' '}
                             &nbsp;
                             All rights reserved
-            </div>
+            </p>
           </div>
         </Row>
       </Container>
