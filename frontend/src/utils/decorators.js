@@ -27,7 +27,7 @@ const parseResultDecorator = (requestFunc) => async (...args) => {
     .catch(() => {
       throw new ResponseException({
         status: 400,
-        message: 'Error with request, try to reload page or try later',
+        message: 'Error with request, try later or reload page',
         statusText: 'FetchError handler',
       });
     });

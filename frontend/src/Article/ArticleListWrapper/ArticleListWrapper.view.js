@@ -39,7 +39,6 @@ const commercialStyle = css({
 
 const ArticleListWrapperView = ({articleList}) => (
   <>
-
     <Card css={articleListStyle}>
       <Card.Body>
         <Card.Title>Article list</Card.Title>
