@@ -23,21 +23,26 @@ const parseRes = async (res) => {
 };
 
 const parseResultDecorator = (requestFunc) => async (...args) => {
-  const res = await requestFunc.call(null, ...args);
+  const res = await requestFunc.call(null, ...args)
+    .catch(() => {
+      throw new ResponseException({
+        status: 400,
+        message: 'Error with request, try later or reload page',
+        statusText: 'FetchError handler',
+      });
+    });
   return parseRes(res);
 };
 
 const composeUrlDecorator = (requestFunc) => async (...args) => {
-  const absoluteUrl = `http://localhost:3200${args[0]}`;
-  // const ags = [...args, absoluteUrl]
-  args[0] = absoluteUrl;
+  args[0] = `http://localhost:3200${args[0]}`;
   return requestFunc.call(null, ...args);
 };
 
 const baseHeadersDecorator = (requestFunc) => async (...args) => {
   const apiHeaders = {
     'Content-Type': 'application/json;charset=utf-8',
-    Authorization: localStorage.getItem('jwt_token'),
+    Authorization: localStorage.getItem('token'),
   };
 
   const headers = {
@@ -71,10 +76,24 @@ const requestCachingDecorator = (cacheMap) => (requestFunc) => async (...args) =
   return res;
 };
 
+const objectToQueryString = async (obj) => Object.keys(obj).map((key) => `${key}=${obj[key]}`).join('&');
+
+
+const baseGetDecorator = (requestFunc) => async (...args) => {
+  if (!args[1].method || args[1].method.toUpperCase() === 'GET') {
+    if (args[1].queryParams) {
+      const queryParams = await objectToQueryString(args[1].queryParams);
+      args[0] = `${args[0]}?${queryParams}`;
+    }
+  }
+  return requestFunc.call(null, ...args);
+};
+
 export {
   timeoutPromiseDecorator,
   parseResultDecorator,
   requestCachingDecorator,
   composeUrlDecorator,
   baseHeadersDecorator,
+  baseGetDecorator,
 };

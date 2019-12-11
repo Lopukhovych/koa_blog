@@ -2,7 +2,8 @@ const Sequelize = require('sequelize');
 const bcrypt = require('bcryptjs');
 const models = require('models/index');
 const { userStatus, userRoles } = require('../constants');
-const { getUserByEmail, createUser } = require('./auth');
+const { createUser } = require('./auth');
+const {getUserByEmail} = require('../utils');
 
 const {Op} = Sequelize;
 async function getUserList(ctx) {
@@ -175,26 +176,6 @@ async function userDelete(ctx) {
   ctx.body = { deleted: true };
 }
 
-async function getActiveUserList() {
-  models.Users.findAll({
-    attributes: ['id', 'email', 'roleId', 'status', 'userInfo'],
-    where: Sequelize.and(
-      { status: userStatus.active },
-    ),
-    raw: true,
-  });
-}
-
-async function getShortActiveUserInfo() {
-  return models.Users.findAll({
-    attributes: ['id', 'email', 'userInfo'],
-    where: Sequelize.and(
-      { status: userStatus.active },
-    ),
-    raw: true,
-  }).map(({id, email, userInfo}) => ({id, email, name: userInfo.name}));
-}
-
 module.exports = {
-  getUserList, getUserDetails, userCreate, userUpdate, userDelete, getActiveUserList, getShortActiveUserInfo,
+  getUserList, getUserDetails, userCreate, userUpdate, userDelete,
 };

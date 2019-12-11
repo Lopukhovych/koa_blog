@@ -4,6 +4,7 @@ import {
   parseResultDecorator,
   composeUrlDecorator,
   baseHeadersDecorator,
+  baseGetDecorator,
 } from './decorators';
 import {compose} from './others';
 
@@ -15,6 +16,7 @@ const enhancedFetch = compose(
   parseResultDecorator,
   baseHeadersDecorator,
   composeUrlDecorator,
+  baseGetDecorator,
 )(fetch);
 
 export default enhancedFetch;

@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const models = require('models/index');
+const {getUserByEmail, getUserById} = require('src/utils');
 const jwtAuth = require('../auth/index');
 
 const { userStatus, userRoles } = require('../constants');
@@ -10,24 +11,6 @@ async function setBadRequest(ctx, error) {
     originalError: 'Bad Request',
     message: error.message,
   };
-}
-
-async function getUserByEmail(email) {
-  try {
-    return models.Users.findOne({ where: { email }, raw: true });
-  } catch (error) {
-    console.error('getUserByEmail error: ', error.message);
-    return error;
-  }
-}
-
-async function getUserById(id) {
-  try {
-    return models.Users.findOne({ where: { id }, raw: true });
-  } catch (error) {
-    console.error('getUserById error: ', error.message);
-    return error;
-  }
 }
 
 async function setUnauthorized(ctx) {
@@ -210,5 +193,5 @@ async function restorePassword(ctx) {
 }
 
 module.exports = {
-  auth, initialize, login, signup, restorePassword, setBadRequest, getUserByEmail, createUser, getUserById,
+  login, initialize, signup, restorePassword, auth, setBadRequest, createUser,
 };

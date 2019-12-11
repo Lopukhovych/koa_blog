@@ -1,4 +1,4 @@
-import { permissions } from './constants';
+const {permissions} = require('./constants');
 
 module.exports = {
   up: async (queryInterface) => {
@@ -11,5 +11,5 @@ module.exports = {
       ...permissionList,
     ]);
   },
-  down: (queryInterface) => queryInterface.bulkDelete('Permissions', null, {}),
+  down: (queryInterface) => queryInterface.bulkDelete('Permissions', null),
 };

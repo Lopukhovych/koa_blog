@@ -32,7 +32,6 @@ const rootStyles = css({
   alignItems: 'stretch',
   maxWidth: '1180px',
   margin: '0 auto',
-  overflow: 'hidden',
 
   [mq[smallDesktop]]: {
     // background: 'red',
