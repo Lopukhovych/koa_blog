@@ -8,24 +8,7 @@ export const history = createBrowserHistory();
 
 const enhancers = [sagaMiddleware];
 
-// if (process.env.NODE_ENV === 'development') {
-//     // eslint-disable-next-line no-underscore-dangle
-//     const devToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION__;
-//
-//     if (typeof devToolsExtension === 'function') {
-//         enhancers.push(devToolsExtension());
-//     }
-// }
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-// const composedEnhancers = compose(
-//     applyMiddleware(
-//         routerMiddleware(history), // for dispatching history actions
-//         ...enhancers,
-//         // ... other middlewares ...
-//     ),
-// );
-
 
 export default function configureStore(preloadedState) {
   return createStore(
@@ -36,10 +19,4 @@ export default function configureStore(preloadedState) {
       ...enhancers,
     )),
   );
-  // const store = createStore(
-  //     createRootReducer(history), // root reducer with router state
-  //     preloadedState,
-  //     composedEnhancers,
-  // );
-  // return store;
 }

@@ -1,16 +1,19 @@
 import {
   LOAD_ARTICLE_PENDING,
   LOAD_ARTICLE_SUCCESS,
-  LOAD_ARTICLE_FAILURE,
+  LOAD_ARTICLE_FAILURE, RESET_ARTICLE,
 } from 'src/Article/ArticleItem/redux/actions';
+import {SAVE_COMMENT_SUCCESS} from 'src/Article/ArticleItem/CommentForm/redux/actions';
 
 const initialState = {
   pending: false,
   error: null,
   article: {},
+  commentList: [],
 };
 
 export default (state = initialState, action) => {
+  const {commentList, ...articleInfo} = action && action.data ? action.data : {};
   switch (action.type) {
     case LOAD_ARTICLE_PENDING:
       return {
@@ -18,17 +21,31 @@ export default (state = initialState, action) => {
         pending: true,
       };
     case LOAD_ARTICLE_SUCCESS:
-      console.log('LOAD_ARTICLE_SUCCESS action: ', action);
       return {
         ...initialState,
-        article: action.data,
+        commentList: commentList || [],
+        article: articleInfo,
       };
     case LOAD_ARTICLE_FAILURE:
-      console.log('LOAD_ARTICLE_FAILURE action: ', action);
       return {
         ...initialState,
         error: action.error,
       };
+    case RESET_ARTICLE:
+      return {
+        ...initialState,
+      };
+    case SAVE_COMMENT_SUCCESS:
+      if (state.article) {
+        return {
+          ...state,
+          commentList: [
+            ...state.commentList,
+            action.data,
+          ],
+        };
+      }
+      return state;
     default:
       return state;
   }

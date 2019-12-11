@@ -8,10 +8,9 @@ import {
 import { loadArticle } from '../apiService';
 
 export function* loadArticleSaga(action) {
-  yield call(loadArticleStart);
+  yield put(loadArticleStart());
   try {
     const articleData = yield call(loadArticle, action && action.id);
-    console.log('articleData: ', articleData);
     yield put(loadArticleSuccess(articleData));
   } catch (error) {
     yield put(loadArticleFailure(error));

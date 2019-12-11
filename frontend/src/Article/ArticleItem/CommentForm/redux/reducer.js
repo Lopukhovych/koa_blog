@@ -1,29 +1,28 @@
 import {
-  LOAD_ARTICLE_LIST_PENDING,
-  LOAD_ARTICLE_LIST_SUCCESS,
-  LOAD_ARTICLE_LIST_ERROR,
+  SAVE_COMMENT_PENDING,
+  SAVE_COMMENT_SUCCESS,
+  SAVE_COMMENT_FAILURE,
 } from './actions';
 
 const initialState = {
   pending: false,
+  success: false,
   error: null,
-  articleList: [],
 };
-
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case LOAD_ARTICLE_LIST_PENDING:
+    case SAVE_COMMENT_PENDING:
       return {
         ...initialState,
         pending: true,
       };
-    case LOAD_ARTICLE_LIST_SUCCESS:
+    case SAVE_COMMENT_SUCCESS:
       return {
         ...initialState,
-        articleList: action.data,
+        success: true,
       };
-    case LOAD_ARTICLE_LIST_ERROR:
+    case SAVE_COMMENT_FAILURE:
       return {
         ...initialState,
         error: action.error,

@@ -64,7 +64,7 @@ const ArticleListWrapperView = ({articleList}) => (
 );
 
 ArticleListView.propTypes = {
-  articleList: PropTypes.arrayOf.isRequired,
+  articleList: PropTypes.arrayOf(PropTypes.any).isRequired,
 };
 
 export default ArticleListWrapperView;

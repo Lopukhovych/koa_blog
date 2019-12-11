@@ -15,7 +15,7 @@ const errorTextStyle = css({
 });
 
 const InputView = ({
-  label, text, onChange, className, invalid, touched, shouldValidate, elementConfig, errorMessage, ...props
+  label, text, onChange, className, invalid, touched, shouldValidate, elementConfig, errorMessage, value, ...props
 }) => {
   let inputElement = null;
   let inputCss = {};
@@ -31,6 +31,7 @@ const InputView = ({
           <FormControl
             onChange={onChange}
             css={{...className, ...inputCss}}
+            value={value}
             {...elementConfig}
           />
           {invalid && touched && (
@@ -47,6 +48,7 @@ const InputView = ({
           onChange={onChange}
           as="textarea"
           css={{...className, ...inputCss}}
+          value={value}
           {...elementConfig}
         />
       );
@@ -72,6 +74,7 @@ const InputView = ({
       inputElement = (
         <FormControl
           onChange={onChange}
+          value={value}
           css={{...className, ...inputCss}}
           {...elementConfig}
         />

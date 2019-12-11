@@ -40,7 +40,7 @@ const sliderArticleStyles = css({
     overflow: 'hidden',
     '& > img': {
       width: '100%',
-      '-webkit-transition': '1.6s -webkit-transform',
+      WebkitTransition: '1.6s -webkit-transform',
       transition: '1.6s transform',
     },
     '&:hover > img ': {

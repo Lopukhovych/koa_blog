@@ -1,10 +1,9 @@
 const { articleStatus } = require('src/constants');
 const models = require('models');
 const Sequelize = require('sequelize');
+const {getCommentListToPost, getCategoryList, getShortActiveUserInfo} = require('src/utils');
 const {getUserById, setBadRequest} = require('./auth');
-const {getCategoryById, getCategoryList} = require('./categories');
-const {getShortActiveUserInfo} = require('./user');
-const {getCommentListToPost} = require('./comments');
+const {getCategoryById} = require('./categories');
 
 const {Op} = Sequelize;
 function getPostInfo(post, authorList, categoryList) {
@@ -123,15 +122,6 @@ async function postDelete(ctx) {
   ctx.body = { deleted: true };
 }
 
-async function getPostById(id) {
-  try {
-    return models.Post.findOne({ where: { id }, raw: true });
-  } catch (error) {
-    console.error('GetPostById error: ', error.message);
-    return error;
-  }
-}
-
 module.exports = {
-  postList, postDetail, postCreate, postUpdate, postDelete, getPostById,
+  postList, postDetail, postCreate, postUpdate, postDelete,
 };

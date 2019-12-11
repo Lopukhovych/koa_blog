@@ -30,12 +30,19 @@ code {
 header, main, footer {
   flex-shrink: 0;
 }
+
 main {
   flex-grow: 1;
 }
+
 a:hover {
   text-decoration: none;
 }
+
 p {
   margin-bottom: 0;
+}
+
+hr {
+  color: #BDBDBD;
 }

@@ -1,7 +1,9 @@
 /** @jsx jsx */
 import {css, jsx} from '@emotion/core';
 
-import {Card, Container, Row} from 'react-bootstrap';
+import {
+  Card, Container, Row,
+} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 
 const smallArticleStyles = css({
@@ -61,7 +63,7 @@ const smallArticleStyles = css({
   },
 
   '& .article-meta': {
-    'list-style-type': 'none',
+    listStyleType: 'none',
     position: 'absolute',
     bottom: '8px',
     right: '0',
@@ -133,7 +135,7 @@ const mainArticleCardStyles = css({
   },
 
   '& .article-meta': {
-    'list-style-type': 'none',
+    listStyleType: 'none',
     position: 'absolute',
     bottom: '1px',
     right: '0',

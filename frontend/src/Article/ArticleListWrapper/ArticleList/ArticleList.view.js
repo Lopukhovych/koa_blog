@@ -48,6 +48,10 @@ const ArticleListView = ({articleList}) => {
   );
 };
 
+ArticleListView.defaultProps = {
+  articleList: [],
+};
+
 ArticleListView.propTypes = {
   articleList: PropTypes.arrayOf(
     PropTypes.shape({
@@ -69,7 +73,7 @@ ArticleListView.propTypes = {
         title: PropTypes.string,
       }),
     }),
-  ).isRequired,
+  ),
 };
 
 export default ArticleListView;

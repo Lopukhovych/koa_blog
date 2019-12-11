@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
-import { loadArticle } from './redux/actions';
+import { loadArticle, resetArticle } from './redux/actions';
 
 import ArticleItemView from './ArticleItem.view';
 
@@ -13,27 +13,44 @@ class ArticleItemContainer extends PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    const {resetArticle} = this.props;
+    resetArticle();
+  }
+
   render() {
-    const {match, article, error} = this.props;
-    console.log('article: ', article);
-    console.log('error: ', error, match);
+    const {
+      article, error, pending, authorized, commentList,
+    } = this.props;
+
     if (error && error.code === 404) {
       return <Redirect to="/article/not-found" />;
     }
-    return (
-      <ArticleItemView article={article} />
-    );
+
+    if (pending) {
+      return <div>Loading...</div>;
+    }
+
+    return article && <ArticleItemView authorized={authorized} article={article} commentList={commentList} />;
   }
 }
 
-const mapStateToProps = ({articleItem}) => ({
-  article: articleItem.article,
-  error: articleItem.error,
+const mapStateToProps = ({
+  articleItem: {
+    pending, article, error, commentList,
+  }, userData: {authorized},
+}) => ({
+  pending,
+  article,
+  commentList,
+  error,
+  authorized,
 });
 
 
 const mapDispatchToProps = ({
   loadArticle,
+  resetArticle,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArticleItemContainer);

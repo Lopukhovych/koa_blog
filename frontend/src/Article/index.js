@@ -8,7 +8,7 @@ const Article = ({ match }) => (
   <Switch>
     <Route exact path={match.path} component={ArticleListWrapperContainer} />
     <Route path={`${match.path}/popular`} component={ArticleListWrapperContainer} />
-    <Route path={`${match.path}/not-found`} component={ArticleNotFound} />
+    <Route exact path={`${match.path}/not-found`} component={ArticleNotFound} />
     <Route path={`${match.path}/:id`} component={ArticleItemContainer} />
   </Switch>
 );

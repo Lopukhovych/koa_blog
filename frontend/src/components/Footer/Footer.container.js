@@ -8,7 +8,6 @@ class FooterContainer extends PureComponent {
   constructor(props) {
     super(props);
     this.fullYear = new Date().getFullYear();
-    console.log('render_footer: ');
   }
 
   render() {

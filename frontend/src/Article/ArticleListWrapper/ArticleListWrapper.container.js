@@ -6,15 +6,12 @@ import ArticleListWrapperView from './ArticleListWrapper.view';
 
 class ArticleListWrapperContainer extends PureComponent {
   componentDidMount() {
-    const { loadArticleList, section, match} = this.props;
-    console.log('match: ', match);
-    console.log('section: ', section);
+    const { loadArticleList } = this.props;
     loadArticleList();
   }
 
   render() {
     const { articleList } = this.props;
-    console.log('articleList111: ', articleList);
     return (
       <ArticleListWrapperView articleList={articleList} />
     );

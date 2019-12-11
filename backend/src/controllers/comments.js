@@ -1,7 +1,6 @@
 const models = require('models');
 const { auth, setBadRequest } = require('../controllers/auth');
-const {getUserById} = require('./auth');
-const {getPostById} = require('./post');
+const {getUserById, getPostById} = require('../utils');
 
 async function commentList(ctx, next) {
   try {
@@ -31,9 +30,8 @@ async function commentUpdate(ctx) {
 async function commentCreate(ctx) {
   const requestBody = ctx.request.body;
   try {
-    ctx.status = 200;
-    const user = getUserById(+requestBody.userId);
-    const post = getPostById(+requestBody.postId);
+    const user = await getUserById(+requestBody.userId);
+    const post = await getPostById(+requestBody.postId);
     if (!user || !post) {
       ctx.status = 400;
       ctx.body = {
@@ -46,7 +44,18 @@ async function commentCreate(ctx) {
       comment: requestBody.comment.toString(),
       postId: +requestBody.postId,
     };
-    ctx.body = await models.Comment.create(newComment);
+    ctx.status = 200;
+    const {
+      id, postId, createdAt, comment,
+    } = await models.Comment.create(newComment);
+    ctx.body = {
+      id,
+      comment,
+      createdAt,
+      'author.id': user.id,
+      'author.email': user.email,
+      postId,
+    };
   } catch (error) {
     if (error.name === 'SequelizeForeignKeyConstraintError') {
       ctx.throw(400, 'Foreign key does not exist');
@@ -61,26 +70,10 @@ async function commentDelete(ctx) {
   ctx.body = { deleted: true };
 }
 
-async function getCommentListToPost(postId) {
-  const comments = await models.Comment
-    .findAll({
-      attributes: [
-        'id',
-        'comment',
-        'createdAt',
-      ],
-      where: { postId },
-      include: {
-        model: models.Users,
-        attributes: ['id', 'email'],
-        required: false,
-        as: 'author',
-      },
-      raw: true,
-    });
-  return comments;
-}
-
 module.exports = {
-  commentList, commentDetail, commentUpdate, commentCreate, commentDelete, getCommentListToPost,
+  commentList,
+  commentDetail,
+  commentUpdate,
+  commentCreate,
+  commentDelete,
 };
