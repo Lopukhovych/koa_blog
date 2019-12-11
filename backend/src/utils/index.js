@@ -57,6 +57,10 @@ async function getCategoryList() {
     });
 }
 
+async function getCategoryById(categoryId) {
+  return models.Category.findOne({where: {id: categoryId}, raw: true });
+}
+
 async function getActiveUserList() {
   models.Users.findAll({
     attributes: ['id', 'email', 'roleId', 'status', 'userInfo'],
@@ -84,6 +88,7 @@ module.exports = {
   getPostById,
   getUserByEmail,
   getCategoryList,
+  getCategoryById,
   getActiveUserList,
   getShortActiveUserInfo,
 };

@@ -1,9 +1,13 @@
 const { articleStatus } = require('src/constants');
 const models = require('models');
 const Sequelize = require('sequelize');
-const {getCommentListToPost, getCategoryList, getShortActiveUserInfo} = require('src/utils');
+const {
+  getCommentListToPost,
+  getCategoryList,
+  getShortActiveUserInfo,
+  getCategoryById,
+} = require('src/utils');
 const {getUserById, setBadRequest} = require('./auth');
-const {getCategoryById} = require('./categories');
 
 const {Op} = Sequelize;
 function getPostInfo(post, authorList, categoryList) {
