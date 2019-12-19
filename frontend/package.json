@@ -29,7 +29,7 @@
   },
   "scripts": {
     "start": "NODE_PATH=. react-scripts start",
-    "build_local": "rm -rf ./build && NODE_PATH=. react-scripts build && rm -rf ../backend/public && mv ./build ../backend/public",
+    "build_local": "npm i && rm -rf ./build && NODE_PATH=. react-scripts build && rm -rf ../backend/public && mv ./build ../backend/public",
     "build": "NODE_PATH=. react-scripts build",
     "test": "NODE_PATH=. ct-scripts test",
     "eject": "react-scripts eject",
@@ -53,5 +53,8 @@
   "devDependencies": {
     "eslint-config-airbnb": "^18.0.1",
     "redux-devtools-extension": "^2.13.8"
+  },
+  "engines": {
+    "node": ">=8.10.0"
   }
 }

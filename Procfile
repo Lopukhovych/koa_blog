@@ -1,0 +1,1 @@
+koa_blog: sh setup.sh
