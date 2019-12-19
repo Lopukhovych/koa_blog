@@ -29,8 +29,19 @@ else
   echo "db created"
 fi
 
-npm install -g sequelize-cli
-npm install -g pm2@latest
+if ! npm -g ls | grep sequelize-cli; then
+  echo "install sequelize-cli"
+  npm install -g sequelize-cli
+else
+  echo "sequelize-cli exist"
+fi
+
+if ! npm -g ls | grep pm2; then
+  echo "install pm2"
+  npm install -g pm2@latest
+else
+  echo "pm2 exist"
+fi
 
 cd backend && sequelize db:migrate && cd ..
 npm install --prefix backend
