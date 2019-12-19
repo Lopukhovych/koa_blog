@@ -1,7 +1,7 @@
 #!/bin/bash
 
-USER_NAME="${DEV_USER_NAME}"
-USER_PASS="${DEV_USER_PASSWORD}"
+USER_NAME="${USER_NAME}"
+USER_PASS="${USER_PASSWORD}"
 
 DATABASE="${DATABASE}"
 
@@ -21,7 +21,7 @@ else
 fi
 
 if psql -lqt | cut -d \| -f 1 | grep -qw "$DATABASE"; then
-  echo "koa_first_db exist"
+  echo "$DATABASE exist"
 else
   echo "db does not exist"
   psql -qc "CREATE DATABASE \"$DATABASE\"
