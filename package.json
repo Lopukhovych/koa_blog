@@ -1,0 +1,28 @@
+{
+  "name": "koa_blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "heroku": "^7.35.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "sh setup.sh",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=8.10.0",
+    "npm": ">=6.13.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://Lopukhovych:d91611d23ab237cc9922f24edb0044064cfc436a@github.com/Lopukhovych/koa_blog.git"
+  },
+  "author": "volod",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lopukhovych/koa_blog/issues"
+  },
+  "homepage": "https://github.com/Lopukhovych/koa_blog#readme"
+}

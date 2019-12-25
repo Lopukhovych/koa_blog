@@ -1,1 +1,1 @@
-koa_blog: sh setup.sh
+worker: sh setup.sh
