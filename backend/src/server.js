@@ -2,6 +2,7 @@ const logger = require('koa-morgan');
 const bodyParser = require('koa-bodyparser');
 const mount = require('koa-mount');
 const serve = require('koa-static');
+const path = require('path');
 
 const {notFound, unauthorized} = require('src/middleware/notFound');
 const {handleException} = require('src/middleware/exception');
@@ -9,7 +10,8 @@ const app = require('./app');
 const router = require('./routes');
 
 
-const port = 3200;
+const serverPort = process.env.PORT || 3200;
+const serverHost = process.env.HOST || '0.0.0.0';
 
 app.use(async (ctx, next) => {
   ctx.set('Access-Control-Allow-Origin', '*');
@@ -31,17 +33,14 @@ app.use(bodyParser({
     ctx.throw('body parse error', 422);
   },
 }));
+
+app.use(serve(path.basename('./public')));
 app.use(unauthorized);
 
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-// app.use(async ctx => {
-//     ctx.body = 'I am your first KOA API!'
-// });
 app.use(mount('/', serve('./public')));
-// for future admin page
-// app.use( mount( '/admin', serve('./admin') ) ) ;
 
 app.use(notFound);
 
@@ -49,8 +48,12 @@ app.on('error', (err) => {
   console.error('server error', err);
 });
 
-const server = app.listen(port);
-console.log(`Run server on  http://localhost:${port}`);
+
+const server = app.listen(serverPort, serverHost, () => {
+  console.log('Listening on port %d', serverPort);
+});
+
+console.log(`Run server on  http://${serverHost}:${serverPort}`);
 
 exports.closeServer = function () {
   server.close();

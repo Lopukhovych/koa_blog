@@ -28,6 +28,7 @@ else
   OWNER =  $USER_NAME;"
   echo "db created"
 fi
+echo '________________________'
 
 if ! npm -g ls | grep sequelize-cli; then
   echo "install sequelize-cli"
@@ -43,7 +44,16 @@ else
   echo "pm2 exist"
 fi
 
-cd backend && sequelize db:migrate && cd ..
-npm install --prefix backend
-npm run --prefix frontend build_local
-npm run --prefix backend prod
+cd frontend || exit
+npm run build_local && cd ..
+echo 'frontend installed'
+
+cd backend || exit
+npm install
+echo 'backend installed'
+
+sequelize db:migrate
+echo 'migrated'
+
+npm run prod
+echo 'runned prod'
