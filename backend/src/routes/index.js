@@ -1,4 +1,6 @@
 const Router = require('koa-router');
+const {createReadStream} = require('fs');
+const path = require('path');
 
 const post = require('./post');
 const comments = require('./comments');
@@ -22,6 +24,11 @@ router.get('/something', (ctx) => {
   ctx.body = {
     something: 'something here123',
   };
+});
+
+router.get('/', (ctx) => {
+  ctx.type = 'html';
+  ctx.body = createReadStream(path.join(path.basename('./public'), 'index.html'));
 });
 
 module.exports = router;

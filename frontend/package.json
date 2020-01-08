@@ -32,9 +32,9 @@
     "build_local": "npm i && rm -rf ./build && NODE_PATH=. react-scripts build && rm -rf ../backend/public && mv ./build ../backend/public",
     "build": "NODE_PATH=. react-scripts build",
     "test": "NODE_PATH=. ct-scripts test",
-    "eject": "react-scripts eject",
-    "proxy": "http://localhost:3200"
+    "eject": "react-scripts eject"
   },
+  "proxy": "http://localhost:3200",
   "eslintConfig": {
     "extends": "react-app"
   },
