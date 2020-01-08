@@ -28,8 +28,6 @@ router.get('/something', (ctx) => {
 
 router.get('/', (ctx) => {
   ctx.type = 'html';
-  console.log('basename: ', path.basename('./public'));
-  console.log('basename1: ', path.join(path.basename('./public'), 'index.html'));
   ctx.body = createReadStream(path.join(path.basename('./public'), 'index.html'));
 });
 
