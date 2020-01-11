@@ -35,6 +35,10 @@ main {
   flex-grow: 1;
 }
 
+a {
+  cursor: pointer;
+}
+
 a:hover {
   text-decoration: none;
 }

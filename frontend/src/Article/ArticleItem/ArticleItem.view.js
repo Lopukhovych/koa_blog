@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
