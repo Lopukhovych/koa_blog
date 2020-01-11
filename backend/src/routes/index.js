@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const {createReadStream} = require('fs');
 const path = require('path');
 
+const info = require('./generalInfo');
 const post = require('./post');
 const comments = require('./comments');
 const auth = require('./auth');
@@ -13,6 +14,7 @@ router = comments(router);
 router = post(router);
 router = auth(router);
 router = user(router);
+router = info(router);
 
 router.get('/second_route', async (ctx, next) => {
   await auth(ctx, next);

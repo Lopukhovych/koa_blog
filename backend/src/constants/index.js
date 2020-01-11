@@ -19,9 +19,15 @@ const userRoles = {
   admin: 'admin',
 };
 
+const pageTitles = {
+  aboutUs: 'aboutUs',
+  contactUs: 'contactUs',
+};
+
 
 module.exports = {
   userStatus,
   userRoles,
   articleStatus,
+  pageTitles,
 };

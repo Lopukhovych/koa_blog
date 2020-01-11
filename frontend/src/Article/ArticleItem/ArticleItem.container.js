@@ -23,7 +23,7 @@ class ArticleItemContainer extends PureComponent {
       article, error, pending, authorized, commentList,
     } = this.props;
 
-    if (error && error.code === 404) {
+    if (error && (error.code === 404 || error.code === 400)) {
       return <Redirect to="/article/not-found" />;
     }
 

@@ -46,7 +46,7 @@ const mainStyle = css({
 const containerWrapperStyles = css({
   maxWidth: '100%',
   height: '100%',
-  '& .row': {
+  '& > .row': {
     height: '100%',
   },
 });
