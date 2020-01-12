@@ -63,7 +63,6 @@ class ContactUsContainer extends PureComponent {
   }
 
   componentDidMount() {
-    console.log('componentDidMount: ');
     const {loadContactUs} = this.props;
     loadContactUs();
   }
