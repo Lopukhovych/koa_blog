@@ -61,34 +61,34 @@ class LoginContainer extends PureComponent {
     this.setState(updateFormControlsHandler(value, controlName, controls));
   };
 
-    submitFormHandler = (e) => {
-      e.preventDefault();
-      const {controls, formIsValid} = this.state;
-      const {loginUser} = this.props;
-      if (formIsValid) {
-        const loginValues = {};
-        Object.keys(controls).forEach((key) => {
-          loginValues[key] = controls[key].value;
-        });
-        loginUser(loginValues);
-      }
-    };
-
-
-    render() {
-      const {controls, formIsValid, errorMessage} = this.state;
-      const {showLabel} = this.props;
-      return (
-        <LoginView
-          controls={controls}
-          formIsValid={formIsValid}
-          showLabel={showLabel}
-          changeFormValueHandler={this.changeFormValueHandler}
-          submitFormHandler={this.submitFormHandler}
-          errorMessage={errorMessage}
-        />
-      );
+  submitFormHandler = (e) => {
+    e.preventDefault();
+    const {controls, formIsValid} = this.state;
+    const {loginUser} = this.props;
+    if (formIsValid) {
+      const loginValues = {};
+      Object.keys(controls).forEach((key) => {
+        loginValues[key] = controls[key].value;
+      });
+      loginUser(loginValues);
     }
+  };
+
+
+  render() {
+    const {controls, formIsValid, errorMessage} = this.state;
+    const {showLabel} = this.props;
+    return (
+      <LoginView
+        controls={controls}
+        formIsValid={formIsValid}
+        showLabel={showLabel}
+        changeFormValueHandler={this.changeFormValueHandler}
+        submitFormHandler={this.submitFormHandler}
+        errorMessage={errorMessage}
+      />
+    );
+  }
 }
 
 const mapStateToProps = ({login}) => ({
