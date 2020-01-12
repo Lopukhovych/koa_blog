@@ -8,6 +8,7 @@ import articleItem from 'src/Article/ArticleItem/redux/reducer';
 import articleList from 'src/Article/ArticleListWrapper/redux/reducer';
 import articleCommentForm from 'src/Article/ArticleItem/CommentForm/redux/reducer';
 import aboutUs from 'src/AboutUs/redux/reducer';
+import contactUs from 'src/ContactUs/redux/reducer';
 
 const createRootReducer = (history) => combineReducers({
   router: connectRouter(history),
@@ -19,6 +20,7 @@ const createRootReducer = (history) => combineReducers({
   articleList,
   articleCommentForm,
   aboutUs,
+  contactUs,
 });
 
 export default createRootReducer;

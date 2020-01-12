@@ -7,6 +7,7 @@ import {watchArticle} from 'src/Article/ArticleItem/redux/sagas';
 import {watchComment} from 'src/Article/ArticleItem/CommentForm/redux/sagas';
 import {watchArticleList} from 'src/Article/ArticleListWrapper/redux/sagas';
 import {watchLoadUs} from 'src/AboutUs/redux/sagas';
+import {watchContactUs} from 'src/ContactUs/redux/sagas';
 import {watchSignOut} from './redux/sagas';
 
 export default function createSaga() {
@@ -22,6 +23,7 @@ export default function createSaga() {
       fork(watchLoadUs),
       fork(watchArticleList),
       fork(watchComment),
+      fork(watchContactUs),
     ]);
   };
 }

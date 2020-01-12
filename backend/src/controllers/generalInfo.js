@@ -25,6 +25,28 @@ async function aboutUsHandler(ctx) {
   }
 }
 
+async function contactUsGetHandler(ctx) {
+  try {
+    const info = JSON.parse(await models.GeneralInfo
+      .findOne({ where: { title: pageTitles.contactUs } }, {raw: true}).get('info'));
+    ctx.body = {...info};
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+async function contactUsSendMessageHandler(ctx) {
+  try {
+    const { name, email, message } = ctx.request.body;
+    ctx.status = 200;
+    ctx.body = {};
+    console.log('contactUsSendMessageHandler: ', name, email, message);
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+
 module.exports = {
-  aboutUsHandler,
+  aboutUsHandler, contactUsGetHandler, contactUsSendMessageHandler,
 };
