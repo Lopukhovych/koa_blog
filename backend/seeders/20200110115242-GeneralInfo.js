@@ -67,6 +67,22 @@ module.exports = {
           ],
         }),
       },
+      {
+        title: pageTitles.contactUs,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        info: JSON.stringify({
+          feedBack: `Our team is open to development and improvement.
+           Therefore, we will be very glad to your feedbacks and wishes. Also,
+             if you have any questions, you can contact us by sending an email.
+             We are very glad to see you on our portal! Have a nice day! 😉`,
+          contactInfo: {
+            country: 'Ukraine',
+            city: 'Kyiv',
+            email: 'koa_blog.help1@gmail.com',
+          },
+        }),
+      },
     ];
     await queryInterface.bulkInsert('GeneralInfo', [
       ...generalInfoList,
