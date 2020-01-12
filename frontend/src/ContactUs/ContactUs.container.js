@@ -6,60 +6,62 @@ import {updateFormControlsHandler} from 'src/core/formHandler.helper';
 import ContactUsView from './ContactUs.view';
 import {loadContactUs, contactUsSendMessage} from './redux/actions';
 
+const initialState = {
+  controls: {
+    name: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        placeholder: 'Name',
+      },
+      value: '',
+      validation: {
+        required: true,
+      },
+      valid: false,
+      errorMessage: 'This field is required',
+      touched: false,
+    },
+    email: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'email',
+        placeholder: 'Your email',
+      },
+      value: '',
+      validation: {
+        required: true,
+        isEmail: true,
+      },
+      valid: false,
+      errorMessage: 'Should contain only a-z, A-Z, 0-9, ._, and one "@"',
+      touched: false,
+    },
+    message: {
+      elementType: 'textarea',
+      elementConfig: {
+        type: 'textarea',
+        placeholder: 'Message',
+        resize: 'none',
+      },
+      value: '',
+      validation: {
+        required: true,
+        maxLength: 300,
+      },
+      valid: false,
+      errorMessage: 'Max length is 300 symbols',
+      touched: false,
+    },
+  },
+  formIsValid: false,
+  errorMessage: null,
+};
+
 class ContactUsContainer extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      controls: {
-        name: {
-          elementType: 'input',
-          elementConfig: {
-            type: 'text',
-            placeholder: 'Name',
-          },
-          value: '',
-          validation: {
-            required: true,
-          },
-          valid: false,
-          errorMessage: 'This field is required',
-          touched: false,
-        },
-        email: {
-          elementType: 'input',
-          elementConfig: {
-            type: 'email',
-            placeholder: 'Your email',
-          },
-          value: '',
-          validation: {
-            required: true,
-            isEmail: true,
-          },
-          valid: false,
-          errorMessage: 'Should contain only a-z, A-Z, 0-9, ._, and one "@"',
-          touched: false,
-        },
-        message: {
-          elementType: 'textarea',
-          elementConfig: {
-            type: 'textarea',
-            placeholder: 'Message',
-            resize: 'none',
-          },
-          value: '',
-          validation: {
-            required: true,
-            maxLength: 300,
-          },
-          valid: false,
-          errorMessage: 'Max length is 300 symbols',
-          touched: false,
-        },
-      },
-      formIsValid: false,
-      errorMessage: null,
-    };
+    this.state = {...initialState};
   }
 
   componentDidMount() {
@@ -83,6 +85,7 @@ class ContactUsContainer extends PureComponent {
         messageData[key] = controls[key].value;
       });
       contactUsSendMessage(messageData);
+      this.setState({...initialState});
     }
   };
 
