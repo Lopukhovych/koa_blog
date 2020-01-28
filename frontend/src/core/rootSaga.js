@@ -8,6 +8,8 @@ import {watchComment} from 'src/Article/ArticleItem/CommentForm/redux/sagas';
 import {watchArticleList} from 'src/Article/ArticleListWrapper/redux/sagas';
 import {watchLoadUs} from 'src/AboutUs/redux/sagas';
 import {watchContactUs} from 'src/ContactUs/redux/sagas';
+import {watchCategoryList} from 'src/Category/CategoryList/redux/sagas';
+import {watchCategory} from 'src/Category/CategoryItem/redux/sagas';
 import {watchSignOut} from './redux/sagas';
 
 export default function createSaga() {
@@ -24,6 +26,8 @@ export default function createSaga() {
       fork(watchArticleList),
       fork(watchComment),
       fork(watchContactUs),
+      fork(watchCategoryList),
+      fork(watchCategory),
     ]);
   };
 }

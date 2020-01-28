@@ -1,33 +1,10 @@
 const bcrypt = require('bcryptjs');
 const models = require('models/index');
 const {getUserByEmail, getUserById} = require('src/utils');
+const {setUnauthorized, setForbidden} = require('src/utils/auth');
 const jwtAuth = require('../auth/index');
 
 const { userStatus, userRoles } = require('../constants');
-
-async function setBadRequest(ctx, error) {
-  ctx.status = 400;
-  ctx.body = {
-    originalError: 'Bad Request',
-    message: error.message,
-  };
-}
-
-async function setUnauthorized(ctx) {
-  return ctx.throw(
-    401,
-    'UNAUTHORIZED',
-    { headers: { 'WWW-Authenticate': 'Basic realm="Secure Area"' } },
-  );
-}
-
-async function setForbidden(ctx) {
-  return ctx.throw(
-    403,
-    'FORBIDDEN',
-    { headers: { 'WWW-Authenticate': 'Basic realm="Secure Area"' } },
-  );
-}
 
 async function getResponseUserInfo(user) {
   return {
@@ -50,20 +27,6 @@ async function equalPasswordsError(ctx) {
       message: "You can't enter last password",
     },
   );
-}
-
-async function auth(ctx, next) {
-  try {
-    const token = ctx.request.header.authorization;
-    const verified = await jwtAuth.verify(token);
-    if (!verified) {
-      return await setUnauthorized(ctx);
-    }
-    next();
-  } catch (error) {
-    console.error('controllers auth error');
-    throw Error(error);
-  }
 }
 
 async function initialize(ctx) {
@@ -179,7 +142,7 @@ async function restorePassword(ctx) {
         const token = await jwtAuth.sign({ ...userInfoWithoutPassword });
         const userInfo = await getResponseUserInfo(userInfoWithoutPassword);
 
-        return ctx.body = { token, ...userInfo };
+        ctx.body = { token, ...userInfo };
       }
     }
     if (comparedPass) {
@@ -187,11 +150,11 @@ async function restorePassword(ctx) {
     }
     return setForbidden(ctx);
   } catch (error) {
-    console.error('controllers auth error');
+    console.error('restore password error: ', error);
     throw Error(error);
   }
 }
 
 module.exports = {
-  login, initialize, signup, restorePassword, auth, setBadRequest, createUser,
+  login, initialize, signup, restorePassword, createUser,
 };

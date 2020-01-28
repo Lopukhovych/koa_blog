@@ -9,6 +9,8 @@ import articleList from 'src/Article/ArticleListWrapper/redux/reducer';
 import articleCommentForm from 'src/Article/ArticleItem/CommentForm/redux/reducer';
 import aboutUs from 'src/AboutUs/redux/reducer';
 import contactUs from 'src/ContactUs/redux/reducer';
+import categoryList from 'src/Category/CategoryList/redux/reducer';
+import category from 'src/Category/CategoryItem/redux/reducer';
 
 const createRootReducer = (history) => combineReducers({
   router: connectRouter(history),
@@ -21,6 +23,8 @@ const createRootReducer = (history) => combineReducers({
   articleCommentForm,
   aboutUs,
   contactUs,
+  categoryList,
+  category,
 });
 
 export default createRootReducer;

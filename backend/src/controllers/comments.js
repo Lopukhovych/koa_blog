@@ -22,9 +22,8 @@ async function commentDetail(ctx) {
 }
 
 async function commentUpdate(ctx) {
-  let comment = await models.Comment.findOne({ where: { id: ctx.params.id } });
-  comment = await comment.update(ctx.request.body.comment);
-  ctx.body = { comment };
+  const comment = await models.Comment.findOne({ where: { id: ctx.params.id } });
+  ctx.body = await comment.update(ctx.request.body.comment);
 }
 
 async function commentCreate(ctx) {
