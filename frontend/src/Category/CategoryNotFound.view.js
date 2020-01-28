@@ -4,7 +4,7 @@ import {Card} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
-const articleNotFoundStyles = css({
+const categoryNotFoundStyles = css({
   width: '100%',
   padding: '2rem',
   '& h3': {
@@ -18,8 +18,8 @@ const articleNotFoundStyles = css({
   },
 });
 
-const ArticleNotFoundView = () => (
-  <Card css={articleNotFoundStyles}>
+const CategoryNotFoundView = () => (
+  <Card css={categoryNotFoundStyles}>
     <h3>
       We apologise, but the article was not found
       {' '}
@@ -32,4 +32,4 @@ const ArticleNotFoundView = () => (
   </Card>
 );
 
-export default ArticleNotFoundView;
+export default CategoryNotFoundView;

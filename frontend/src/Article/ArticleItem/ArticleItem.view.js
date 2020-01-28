@@ -76,6 +76,12 @@ const contentComments = css({
   },
 });
 
+const noCommentsStyle = css({
+  margin: '-10px 8px 2px',
+  color: '#9E9E9E',
+  fontSize: '14px',
+});
+
 const getArticleContent = (content) => {
   const innerHtml = { __html: content };
   return <div dangerouslySetInnerHTML={innerHtml} />;
@@ -117,20 +123,21 @@ const ArticleItemView = ({ article, authorized, commentList }) => (
               </Link>
                 ;
             </span>
-            <span>
+            {article.author && (
+              <span>
                 Author:&nbsp;
-              <Link to={`/author/${article.author && article.author.id}`}>
-                {article.author && article.author.email}
-              </Link>
-                ;
-            </span>
+                <Link to={`/author/${article.author && article.author.id}`}>
+                  {article.author && article.author.name ? article.author.name : article.author.email}
+                </Link>
+              </span>
+            )}
           </p>
         </div>
         {getArticleContent(article.content)}
         <hr />
         <div css={contentComments}>
           <h4>Comments</h4>
-          {commentList && getComements(commentList)}
+          {commentList && commentList.length ? getComements(commentList) : <p css={noCommentsStyle}>No comments yet</p>}
           {authorized && <CommentFormContainer articleId={article.id} />}
         </div>
       </div>

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Jumbotron } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-const articleItem = css({
+const articleItemStyles = css({
   '& .jumbotron': {
     padding: '1rem',
     marginBottom: '20px',
@@ -31,22 +31,19 @@ const articleItem = css({
   },
 });
 
-const ArticleListView = ({articleList}) => {
-  const articles = articleList.map((article) => (
-    <Link key={article.id} css={articleItem} to={`/article/${article.id}`}>
-      <Jumbotron>
-        { article.imageUrl && <img className="article-img" src={article.imageUrl} alt="article" />}
-        <h5 className="article-title">{article.title}</h5>
-        <span className="article-publish">{new Date(article.publishedDate).toDateString()}</span>
-      </Jumbotron>
-    </Link>
-  ));
-  return (
-    <>
-      {articles}
-    </>
-  );
-};
+const ArticleListView = ({articleList}) => (
+  <>
+    {articleList.map((article) => (
+      <Link key={article.id} css={articleItemStyles} to={`/article/${article.id}`}>
+        <Jumbotron>
+          { article.imageUrl && <img className="article-img" src={article.imageUrl} alt="article" />}
+          <h5 className="article-title">{article.title}</h5>
+          <span className="article-publish">{new Date(article.publishedDate).toDateString()}</span>
+        </Jumbotron>
+      </Link>
+    ))}
+  </>
+);
 
 ArticleListView.defaultProps = {
   articleList: [],

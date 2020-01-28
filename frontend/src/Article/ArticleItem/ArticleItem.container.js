@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 import { loadArticle, resetArticle } from './redux/actions';
+import Loading from 'src/components/Loading';
 
 import ArticleItemView from './ArticleItem.view';
 
@@ -28,7 +29,7 @@ class ArticleItemContainer extends PureComponent {
     }
 
     if (pending) {
-      return <div>Loading...</div>;
+      return <Loading />;
     }
 
     return article && <ArticleItemView authorized={authorized} article={article} commentList={commentList} />;
