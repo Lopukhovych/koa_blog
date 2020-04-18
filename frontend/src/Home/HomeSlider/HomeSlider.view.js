@@ -126,7 +126,9 @@ const HomeSliderView = ({categoryList, settings}) => {
   ));
   return (
     <Container fluid css={homeSliderWrapperStyles}>
-      <h2>Categories</h2>
+      <h2>
+        <Link to="/category">Categories</Link>
+      </h2>
       <Slider {...settings}>
         {selectCategoryList}
       </Slider>

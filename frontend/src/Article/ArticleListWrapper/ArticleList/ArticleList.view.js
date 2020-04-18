@@ -28,6 +28,9 @@ const articleItemStyles = css({
     position: 'absolute',
     right: '1rem',
     bottom: '1rem',
+    '& span': {
+      margin: '0 4px',
+    },
   },
 });
 
@@ -38,7 +41,14 @@ const ArticleListView = ({articleList}) => (
         <Jumbotron>
           { article.imageUrl && <img className="article-img" src={article.imageUrl} alt="article" />}
           <h5 className="article-title">{article.title}</h5>
-          <span className="article-publish">{new Date(article.publishedDate).toDateString()}</span>
+          <p className="article-publish">
+            <span>
+              Views:
+              {' '}
+              {article.viewNumber}
+            </span>
+            <span>{new Date(article.publishedDate).toDateString()}</span>
+          </p>
         </Jumbotron>
       </Link>
     ))}

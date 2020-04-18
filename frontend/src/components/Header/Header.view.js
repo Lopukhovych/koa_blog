@@ -33,6 +33,7 @@ const logoWrapperStyles = css({
   borderRadius: '50%',
   margin: '0 10px',
   cursor: 'pointer',
+  minWidth: '40px',
   '&:hover': {
     cursor: 'pointer',
   },
@@ -52,6 +53,7 @@ const HeaderView = ({
     </Navbar.Brand>
     <Nav className="mr-auto">
       <Nav.Link as={Link} to="/">Home</Nav.Link>
+      <Nav.Link as={Link} to="/article">Articles</Nav.Link>
       <Nav.Link as={Link} to="/category">Categories</Nav.Link>
       <Nav.Link as={Link} to="/author">Authors</Nav.Link>
       <Nav.Link as={Link} to="/about_us">About us</Nav.Link>

@@ -1,8 +1,8 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
-import { loadArticle, resetArticle } from './redux/actions';
 import Loading from 'src/components/Loading';
+import { loadArticle, resetArticle } from './redux/actions';
 
 import ArticleItemView from './ArticleItem.view';
 
