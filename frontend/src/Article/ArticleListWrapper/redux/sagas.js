@@ -11,9 +11,9 @@ import {loadArticleList} from '../apiService';
 export function* loadArticleListSaga(action) {
   yield call(loadArticleListStart);
   try {
-    const queryParams = action.params;
-    const articleList = yield call(loadArticleList, queryParams);
-    yield put(loadArticleListSuccess(articleList));
+    const params = {queryParams: action.params};
+    const articleData = yield call(loadArticleList, params);
+    yield put(loadArticleListSuccess(articleData));
   } catch (error) {
     yield put(loadArticleListFailure(error));
   }

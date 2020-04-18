@@ -78,7 +78,9 @@ const HomeLastArticleView = ({articleList}) => {
   ));
   return (
     <Container fluid>
-      <h2>Last articles</h2>
+      <h2>
+        <Link to="/article">Last articles</Link>
+      </h2>
       <Row css={cardWrapperStyles}>
         {lastArticleList}
       </Row>

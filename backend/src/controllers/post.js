@@ -10,6 +10,8 @@ const {
 const {getUserById, setBadRequest} = require('./auth');
 
 const {Op} = Sequelize;
+const DefaultLoadLimit = 5;
+
 function getPostInfo(post, authorList, categoryList) {
   const {
     userId,
@@ -25,21 +27,49 @@ function getPostInfo(post, authorList, categoryList) {
   };
 }
 
-async function postList(ctx) {
-  const posts = await models.Post
-    .findAll({
+async function getPosts(params) {
+  const {popular, limit = DefaultLoadLimit, page = 1} = await params;
+  const loadPage = page > 0 ? page : 1;
+  const offset = (page - 1) * limit;
+  const order = [];
+
+  if (popular) {
+    order.push(['viewNumber', 'DESC']);
+  }
+
+  const {rows, count} = await models.Post
+    .findAndCountAll({
       where: {
         publishedDate: {
           [Op.not]: null,
         },
         status: articleStatus.published,
       },
+      order,
+      offset,
+      limit,
       raw: true,
     });
+
+  return {
+    posts: rows,
+    details: {
+      pages: Math.ceil(count / limit),
+      current: +loadPage,
+    },
+  };
+}
+
+async function postList(ctx) {
+  const {posts, ...details} = await getPosts(ctx.request.query);
   const categoryList = await getCategoryList();
   const userList = await getShortActiveUserInfo();
   const processedPostList = posts.map((post) => getPostInfo(post, userList, categoryList));
-  ctx.body = [...processedPostList];
+
+  ctx.body = {
+    posts: [...processedPostList],
+    ...details,
+  };
 }
 
 async function postDetail(ctx) {
@@ -49,6 +79,7 @@ async function postDetail(ctx) {
     const userList = await getShortActiveUserInfo();
     const commentList = await getCommentListToPost(post.id);
     const precessedPost = getPostInfo(post, userList, categoryList);
+
     precessedPost.commentList = commentList;
     ctx.body = {...precessedPost};
   } catch (error) {

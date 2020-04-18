@@ -32,7 +32,7 @@ const categoryHeaderStyle = css({
     fontSize: '28px',
   },
 });
-const categoryItemStyle = css({
+const categoryBlockStyle = css({
   display: 'flex',
   flexWrap: 'wrap',
   width: '100%',
@@ -61,12 +61,22 @@ const categoryItemStyle = css({
   },
 });
 
+const emptyCategoryListStyles = css({
+  color: '#757575',
+});
+
+const emptyCategoryList = (
+  <div css={emptyCategoryListStyles}>
+    <p>This category has no articles</p>
+  </div>
+);
+
 const transformCategoryList = (categoryList) => categoryList && categoryList.map((category) => (
   <Jumbotron css={categoryWrapperStyle} key={category.id}>
     <Link css={categoryHeaderStyle} to={`/category/${category.id}`}>
       <h5>{category.title}</h5>
     </Link>
-    <div css={categoryItemStyle}>
+    <div css={categoryBlockStyle}>
       {
         category.postList && category.postList.length
           ? category.postList.map((post) => (
@@ -74,7 +84,7 @@ const transformCategoryList = (categoryList) => categoryList && categoryList.map
               <img src={post.imageUrl} alt="article" />
               <p>{post.title}</p>
             </Link>
-          )) : null
+          )) : emptyCategoryList
       }
     </div>
   </Jumbotron>

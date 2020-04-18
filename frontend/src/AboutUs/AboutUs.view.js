@@ -54,6 +54,10 @@ const teamListStyles = css({
 });
 
 const sliderBlockStyles = css({
+  '& .slick-arrow:before': {
+    opacity: '0.5',
+    color: '#000',
+  },
   '& .slick-dots': {
     bottom: '-40px',
   },

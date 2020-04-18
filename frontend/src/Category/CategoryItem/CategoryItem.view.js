@@ -123,6 +123,11 @@ const articleStyle = css({
   },
 });
 
+const categoryNoArticleStyles = css({
+  color: '#757575',
+  fontSize: '17px',
+});
+
 const transformPostList = (postList) => postList && postList.map((article) => (
   <Card
     key={article.id}
@@ -155,6 +160,14 @@ const transformPostList = (postList) => postList && postList.map((article) => (
   </Card>
 ));
 
+const categoryNoArticle = (
+  <div css={categoryNoArticleStyles}>
+    <p>
+      This category has no articles yet
+    </p>
+  </div>
+);
+
 const CategoryItemView = ({categoryInfo}) => (
   <>
     <Card css={categoryWrapperStyle}>
@@ -165,7 +178,7 @@ const CategoryItemView = ({categoryInfo}) => (
     </Card>
     <div css={contentWrapperStyle}>
       <Card css={articleWrapperStyle}>
-        {categoryInfo.postList ? transformPostList(categoryInfo.postList) : <div />}
+        {categoryInfo.postList.length ? transformPostList(categoryInfo.postList) : categoryNoArticle}
       </Card>
       <Commercials />
     </div>

@@ -205,7 +205,7 @@ const HomePopularNewsView = ({ articleList}) => {
         <div className="col-5 d-flex flex-column justify-content-between">
           <h4>Popular News</h4>
           {asideArticles}
-          <Link to="/article" css={allPopularArticleLink}>
+          <Link to="/article/popular" css={allPopularArticleLink}>
             <h6>All popular articles</h6>
           </Link>
         </div>

@@ -98,6 +98,21 @@ const getComements = (commentList) => commentList.map((comment) => (
   </div>
 ));
 
+const notAuthorizedCommentBlockStyles = css({
+  margin: '8px',
+  color: '#757575',
+});
+
+const notAuthorizedCommentBlock = (
+  <div css={notAuthorizedCommentBlockStyles}>
+    <p>
+      Only authorized users can leave comments.
+      {' '}
+      <Link to="/auth">Log in</Link>
+    </p>
+  </div>
+);
+
 const ArticleItemView = ({ article, authorized, commentList }) => (
   <Card css={articleStyles}>
     <h2>{article.title}</h2>
@@ -138,7 +153,7 @@ const ArticleItemView = ({ article, authorized, commentList }) => (
         <div css={contentComments}>
           <h4>Comments</h4>
           {commentList && commentList.length ? getComements(commentList) : <p css={noCommentsStyle}>No comments yet</p>}
-          {authorized && <CommentFormContainer articleId={article.id} />}
+          {authorized ? <CommentFormContainer articleId={article.id} /> : notAuthorizedCommentBlock}
         </div>
       </div>
       <div css={asideContentStyles}>
