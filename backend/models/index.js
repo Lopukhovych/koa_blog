@@ -9,9 +9,6 @@ const basename = path.basename(__filename);
 const db = {};
 let sequelize;
 
-// const dbConfigPath = path.join(__dirname, '..', 'db_config.js');
-// const config = require(__dirname + '/../db_config.js')[env];
-
 if (config.use_env_variable) {
   sequelize = new Sequelize(config.url, config);
 } else {

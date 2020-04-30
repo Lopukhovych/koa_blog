@@ -3,6 +3,7 @@ import {css, jsx} from '@emotion/core';
 import React from 'react';
 import {Form, Button} from 'react-bootstrap';
 import Input from 'src/components/Input';
+import { GoogleLogin } from 'react-google-login';
 
 const inputStyle = css({
   border: '1px solid green',
@@ -18,9 +19,21 @@ const errorMessageStyle = css({
   color: 'red',
 });
 
+const googleLoginButtonStyle = css({
+  margin: '4px 0 10px',
+  width: '100%',
+});
+
 
 const LoginView = ({
-  controls, formIsValid, changeFormValueHandler, submitFormHandler, showLabel, errorMessage,
+  controls,
+  formIsValid,
+  changeFormValueHandler,
+  submitFormHandler,
+  showLabel,
+  errorMessage,
+  redirectPath,
+  responseGoogle,
 }) => {
   const formElementsArray = [];
   Object.entries(controls).forEach((control) => {
@@ -45,18 +58,35 @@ const LoginView = ({
     />
   ));
   return (
-    <Form css={formStyle} onSubmit={submitFormHandler}>
-      {form}
-      <Button
-        disabled={!formIsValid}
-        className="col col-xs-12 col-sm-6"
-        variant="primary"
-        type="submit"
-      >
-Log In
-      </Button>
-      {errorMessage && <p css={errorMessageStyle}>{errorMessage}</p>}
-    </Form>
+    <div>
+      <GoogleLogin
+        css={googleLoginButtonStyle}
+        clientId="306944745239-bmnum18doj837as22viass5005u0iuh7.apps.googleusercontent.com"
+        theme="dark"
+        buttonText="Login with Google"
+        onSuccess={responseGoogle}
+        onFailure={(error) => {
+          console.log('error: ', error);
+        }}
+        cookiePolicy="single_host_origin"
+        accessType="offline"
+        responseType="code"
+        redirectUri={redirectPath}
+        prompt="consent"
+      />
+      <Form css={formStyle} onSubmit={submitFormHandler}>
+        {form}
+        <Button
+          disabled={!formIsValid}
+          className="col col-xs-12 col-sm-6"
+          variant="primary"
+          type="submit"
+        >
+          Log In
+        </Button>
+        {errorMessage && <p css={errorMessageStyle}>{errorMessage}</p>}
+      </Form>
+    </div>
   );
 };
 

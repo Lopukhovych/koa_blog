@@ -1,6 +1,5 @@
-const jwtAuth = require('src/auth/index');
 const models = require('models/index');
-
+const {jwtAuth} = require('src/auth');
 const { userRoles } = require('src/constants');
 
 async function setBadRequest(ctx, error) {

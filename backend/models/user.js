@@ -6,6 +6,10 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     secretWord: DataTypes.STRING,
     userInfo: DataTypes.JSONB,
+    googleId: DataTypes.STRING,
+    facebookId: DataTypes.STRING,
+    refreshData: DataTypes.JSONB,
+
   }, {
     freezeTableName: true,
   });

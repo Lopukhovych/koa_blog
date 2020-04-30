@@ -2,7 +2,9 @@ import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {passwordControl, updateFormControlsHandler} from 'src/core/formHandler.helper';
 import LoginView from './Login.view';
-import {loginUser as loginUserAction} from './redux/actions';
+import {loginUser as loginUserAction, loginGoogleUser as loginGoogleUserAction} from './redux/actions';
+
+const redirectURL = '' || process.env.REACT_APP_URL;
 
 
 class LoginContainer extends PureComponent {
@@ -44,6 +46,7 @@ class LoginContainer extends PureComponent {
       formIsValid: false,
       errorMessage: null,
     };
+    this.responseGoogle = this.responseGoogle.bind(this);
   }
 
   static getDerivedStateFromProps(props) {
@@ -74,6 +77,12 @@ class LoginContainer extends PureComponent {
     }
   };
 
+  responseGoogle = (data) => {
+    const {loginGoogleUser} = this.props;
+    console.log('responseGoogle: ', data);
+    loginGoogleUser(data);
+  };
+
 
   render() {
     const {controls, formIsValid, errorMessage} = this.state;
@@ -86,6 +95,8 @@ class LoginContainer extends PureComponent {
         changeFormValueHandler={this.changeFormValueHandler}
         submitFormHandler={this.submitFormHandler}
         errorMessage={errorMessage}
+        redirectPath={redirectURL}
+        responseGoogle={this.responseGoogle}
       />
     );
   }
@@ -97,6 +108,7 @@ const mapStateToProps = ({login}) => ({
 
 const mapDispatchToProps = {
   loginUser: loginUserAction,
+  loginGoogleUser: loginGoogleUserAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginContainer);

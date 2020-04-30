@@ -1,5 +1,5 @@
 import {put, call, takeEvery} from 'redux-saga/effects';
-import {getStorageItem} from 'src/utils/others';
+import {getStorageItem, setStorageItem, removeStorageItem} from 'src/utils/others';
 
 import {
   initializeStart, initializeSuccess, initializeFail, INITIALIZE_USER,
@@ -14,9 +14,11 @@ export function* initializeUserSaga() {
   };
   yield put(initializeStart());
   try {
-    const resp = yield call(initialize, initialData);
-    yield put(initializeSuccess(resp));
+    const {refreshToken, ...userData} = yield call(initialize, initialData);
+    if (refreshToken) setStorageItem('token', refreshToken);
+    yield put(initializeSuccess(userData));
   } catch (error) {
+    removeStorageItem('token');
     yield put(initializeFail(error));
   }
 }

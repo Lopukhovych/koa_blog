@@ -40,15 +40,6 @@ async function getPostById(id) {
   }
 }
 
-async function getUserByEmail(email) {
-  try {
-    return models.Users.findOne({ where: { email }, raw: true });
-  } catch (error) {
-    console.error('getUserByEmail error: ', error.message);
-    return error;
-  }
-}
-
 async function getCategoryList() {
   return models.Category
     .findAll({
@@ -86,7 +77,6 @@ module.exports = {
   getCommentListToPost,
   getUserById,
   getPostById,
-  getUserByEmail,
   getCategoryList,
   getCategoryById,
   getActiveUserList,

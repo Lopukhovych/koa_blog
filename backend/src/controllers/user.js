@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
 const bcrypt = require('bcryptjs');
 const models = require('models/index');
-const { userStatus, userRoles } = require('../constants');
-const { createUser } = require('./auth');
-const {getUserByEmail} = require('../utils');
+const { userStatus} = require('src/constants');
+const { createCustomUser } = require('src/services/user');
+const {getUserByEmail} = require('src/services/email');
 
 const {Op} = Sequelize;
 async function getUserList(ctx) {
@@ -34,45 +34,28 @@ async function getUserDetails(ctx) {
 async function userCreate(ctx) {
   const {
     email,
-    role,
-    status,
     password,
-    secretWord,
-    age,
-    name,
+    userData,
   } = ctx.request.body;
+
+  console.log('userCreate: ');
+
+  // TODO check token rights if not admin - response permission error
+
   if (!password || !email) {
     ctx.status = 400;
     ctx.body = {
       error: 'email and password are required!',
     };
+    return;
   }
-  const emailStr = email.toString();
 
-  const userRole = await models.Role.findOne({ where: { title: userRoles.user }, raw: true });
-  let enteredRole = null;
-  if (role) {
-    try {
-      enteredRole = await models.Role.findOne({ where: { title: role.toString() }, raw: true });
-    } catch (err) {
-      console.error(`Role ${role} does not exist`);
-    }
-  }
-  const userData = {
-    email: emailStr,
-    password: await bcrypt.hash(password, 8),
-    secretWord: secretWord && await bcrypt.hash(secretWord, 10),
-    status: userStatus.pending || userStatus[status],
-    roleId: enteredRole ? enteredRole.id : userRole.id,
-    userInfo: {
-      age,
-      name,
-    },
-  };
-  const user = await getUserByEmail(emailStr);
+  const user = await getUserByEmail(email);
   if (!user) {
     try {
-      const newUser = await createUser(userData);
+      const newUser = await createCustomUser({
+        email, password, ...userData,
+      });
       ctx.status = 200;
       ctx.body = {
         message: 'success',
