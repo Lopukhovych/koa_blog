@@ -1,31 +1,19 @@
-const models = require('models');
-const Sequelize = require('sequelize');
-const {articleStatus} = require('src/constants');
-const {authAdmin, setBadRequest} = require('src/utils/auth');
+const {
+  getTransformedCategoryList,
+  getAllCategories,
+  getCategoryInfo,
+  getCategoryPostListWithDetails,
+  createNewCategory,
+  updateCategory,
+  deleteCategory,
+} = require('src/services/category');
+const {authAdmin} = require('src/middleware/auth');
+const {setBadRequest} = require('src/middleware/exception');
 
 async function categoryList(ctx) {
   try {
-    const categories = await models.Category.findAll({
-      attributes: ['id', 'title'],
-      raw: true,
-    });
-    const transformedCategoryList = await Promise.all(categories.map(async (category) => ({
-      ...category,
-      postList: await models.Post.findAll({
-        attributes: [
-          'id', 'title', 'imageUrl',
-        ],
-        where: Sequelize.and(
-          {categoryId: category.id},
-          {status: articleStatus.published},
-        ),
-        order: [
-          ['viewNumber', 'DESC'],
-        ],
-        limit: 3,
-        raw: true,
-      }),
-    })));
+    const categories = await getAllCategories();
+    const transformedCategoryList = await getTransformedCategoryList(categories);
 
     ctx.status = 200;
     ctx.body = [...transformedCategoryList];
@@ -36,13 +24,15 @@ async function categoryList(ctx) {
 
 async function categoryDetail(ctx) {
   try {
-    const category = await models.Category.findOne({
-      attributes: ['id', 'title', 'description'],
-      where: {
-        id: ctx.params.id,
-      },
-      raw: true,
-    });
+    const {id} = ctx.params;
+
+    if (!id) {
+      return setBadRequest(ctx, {
+        message: 'No category id',
+      });
+    }
+
+    const category = await getCategoryInfo(id);
 
     if (!category) {
       return setBadRequest(ctx, {
@@ -50,33 +40,7 @@ async function categoryDetail(ctx) {
       });
     }
 
-    const postList = await models.Post.findAll({
-      attributes: [
-        'id', 'title', 'imageUrl', 'publishedDate', 'userId', 'viewNumber',
-      ],
-      where: Sequelize.and(
-        {categoryId: category.id},
-        {status: articleStatus.published},
-      ),
-      include: {
-        model: models.Users,
-        attributes: ['email', 'userInfo'],
-        required: false,
-        as: 'author',
-      },
-      order: [
-        ['viewNumber', 'DESC'],
-      ],
-      limit: 10,
-      raw: true,
-    });
-    postList.forEach((post) => {
-      if (post['author.userInfo'] && post['author.userInfo'].name) {
-        post['author.name'] = post['author.userInfo'].name;
-        delete post['author.userInfo'];
-      }
-    });
-
+    const postList = await getCategoryPostListWithDetails(category.id);
     ctx.status = 200;
     ctx.body = {...category, postList};
   } catch (error) {
@@ -85,20 +49,22 @@ async function categoryDetail(ctx) {
 }
 
 async function categoryCreate(ctx, next) {
-  const requestBody = ctx.request.body;
   try {
     await authAdmin(ctx, next);
-    const newCategory = {
-      title: requestBody.title.toString(),
-    };
-    const {
-      id, title, createdAt,
-    } = await models.Category.create(newCategory);
+
+
+    const {title} = ctx.request.body;
+    if (!title) {
+      return setBadRequest(ctx, {
+        message: 'Can\'t find category',
+      });
+    }
+
+    const category = await createNewCategory(title, ['id', 'title', 'createdAt']);
+
     ctx.status = 200;
     ctx.body = {
-      id,
-      title,
-      createdAt,
+      ...category,
     };
   } catch (error) {
     if (error.name === 'SequelizeForeignKeyConstraintError') {
@@ -108,15 +74,63 @@ async function categoryCreate(ctx, next) {
   }
 }
 
-async function categoryUpdate(ctx) {
-  const category = await models.Category.findOne({where: {id: ctx.params.id}});
-  ctx.body = await category.update(ctx.request.body.category);
+async function categoryUpdate(ctx, next) {
+  try {
+    await authAdmin(ctx, next);
+
+    const {id} = ctx.params;
+    const {category} = ctx.request.body;
+    if (!id || !category) {
+      return setBadRequest(ctx, {
+        message: 'No category id or body',
+      });
+    }
+
+    const {error, ...updatedCategory} = await updateCategory(id, category);
+
+    if (error) {
+      return setBadRequest(ctx, {
+        message: error,
+      });
+    }
+    ctx.status = 200;
+    ctx.body = {
+      ...updatedCategory,
+    };
+  } catch (error) {
+    console.log(' error: ', error);
+    setBadRequest(ctx, error);
+  }
 }
 
-async function categoryDelete(ctx) {
-  const category = await models.Category.findOne({where: {id: +ctx.params.id}});
-  await category.destroy();
-  ctx.body = {deleted: true};
+async function categoryDelete(ctx, next) {
+  try {
+    await authAdmin(ctx, next);
+
+    const {id} = ctx.params;
+
+    if (!id) {
+      return setBadRequest(ctx, {
+        message: 'No category id',
+      });
+    }
+
+    const {error, status} = await deleteCategory(id);
+
+    if (error) {
+      return setBadRequest(ctx, {
+        message: error,
+      });
+    }
+
+    ctx.status = 200;
+    ctx.body = {
+      status,
+    };
+  } catch (error) {
+    console.log(' error: ', error);
+    setBadRequest(ctx, error);
+  }
 }
 
 module.exports = {

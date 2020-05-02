@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const {jwtAuth} = require('src/auth');
 const models = require('models');
 const {userStatus, userRoles} = require('../constants');
 const {createUser} = require('../resources/user');
@@ -8,6 +9,7 @@ async function getResponseUserInfo(user) {
   return {
     id: user.id,
     email: user.email,
+    roleId: user.roleId,
     ...user.userInfo,
   };
 }
@@ -95,6 +97,34 @@ async function createLocalUser({
   return createUser(userData);
 }
 
+async function updateUserPassword(user, newPassword) {
+  const updatedPassword = await bcrypt.hash(newPassword, 8);
+  const updatedUser = await user.update({ password: updatedPassword });
+
+  if (updatedUser) {
+    const { password, secredWord, ...userInfoWithoutPassword } = updatedUser.toJSON();
+    const token = await jwtAuth.sign({ ...userInfoWithoutPassword });
+    const userInfo = await getResponseUserInfo(userInfoWithoutPassword);
+
+    return { token, ...userInfo };
+  }
+  return {error: 'Could not update user!'};
+}
+
+async function getUserById(id) {
+  try {
+    return models.Users.findOne({ where: { id }, raw: true });
+  } catch (error) {
+    console.error('getUserById error: ', error.message);
+    return error;
+  }
+}
+
 module.exports = {
-  createGoogleUser, getResponseUserInfo, createLocalUser, createCustomUser,
+  createGoogleUser,
+  getResponseUserInfo,
+  createLocalUser,
+  createCustomUser,
+  updateUserPassword,
+  getUserById,
 };

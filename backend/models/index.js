@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 
+require('../enhancers/sequelize')(Sequelize);
+
 const env = process.env.NODE_ENV || 'development';
 const config = require('../db_config')[env];
 

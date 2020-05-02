@@ -1,12 +1,16 @@
 const bcrypt = require('bcryptjs');
-const models = require('models/index');
-const {getUserById} = require('src/utils');
-const {setUnauthorized, setForbidden} = require('src/utils/auth');
-const {getResponseUserInfo, createLocalUser} = require('src/services/user');
 const {jwtAuth} = require('src/auth');
+const {setUnauthorized, setForbidden} = require('src/middleware/exception');
+const {
+  getResponseUserInfo,
+  createLocalUser,
+  updateUserPassword,
+  getUserById,
+} = require('src/services/user');
 const {getUserByEmail} = require('src/services/email');
 const {equalPasswordsError} = require('src/services/error');
 const {comparePassword} = require('src/services/password');
+const {checkForRefreshToken} = require('src/services/token');
 
 async function initialize(ctx) {
   try {
@@ -15,15 +19,13 @@ async function initialize(ctx) {
     if (!verified) {
       return setUnauthorized(ctx);
     }
+
     const decodedData = await jwtAuth.decode(token).payload;
     const user = await getUserById(decodedData.id);
     const userInfo = await getResponseUserInfo(user);
-    if (Math.floor((new Date(decodedData.exp * 1000) - new Date()) / (1000 * 3600 * 24)) < 2) {
-      const refreshToken = await jwtAuth.sign({ ...userInfo });
-      ctx.body = { refreshToken, ...userInfo };
-      return null;
-    }
-    ctx.body = { ...userInfo };
+    const refreshToken = checkForRefreshToken(decodedData, userInfo);
+
+    ctx.body = refreshToken ? { refreshToken, ...userInfo } : { ...userInfo };
     return null;
   } catch (error) {
     return setUnauthorized(ctx);
@@ -33,7 +35,8 @@ async function initialize(ctx) {
 async function login(ctx) {
   try {
     const { email, password: enteredPass } = ctx.request.body;
-    const user = await getUserByEmail(email.toString());
+
+    const user = await getUserByEmail(email);
 
     if (!user || !enteredPass) {
       return setUnauthorized(ctx);
@@ -41,7 +44,6 @@ async function login(ctx) {
 
     const {password} = user;
     const equalPassword = await comparePassword(enteredPass, password);
-
 
     if (equalPassword) {
       const userInfo = await getResponseUserInfo(user);
@@ -59,12 +61,14 @@ async function signup(ctx, next) {
   const {
     email, password, secretWord, ...userInfo
   } = ctx.request.body;
+
   if (!userInfo.name || !password || !email) {
     ctx.status = 400;
     ctx.body = {
-      error: "expected an object with email and password, but didn't  get these params",
+      error: "expected an object with email and password, but didn't get these params",
     };
   }
+
   const user = await getUserByEmail(email);
 
   if (!user) {
@@ -90,34 +94,43 @@ async function signup(ctx, next) {
 async function restorePassword(ctx) {
   try {
     const { email, secretWord: enteredSecretWord, password: newPassword } = ctx.request.body;
-    const user = await models.Users.findOne({ where: { email } });
 
-    if (!user || !enteredSecretWord) {
-      return setUnauthorized(ctx);
+    if (!email || !enteredSecretWord || !newPassword) {
+      ctx.status = 400;
+      ctx.body = {
+        error: 'Expected fields are email, secret word and new password',
+      };
+      return;
     }
 
-    const compared = await bcrypt.compare(enteredSecretWord, user.secretWord);
+    const user = await getUserByEmail(email);
+
+    if (!user) {
+      ctx.status = 400;
+      ctx.body = {
+        error: 'Can not find user with entered email',
+      };
+      return;
+    }
+
+    const comparedSecretWord = await bcrypt.compare(enteredSecretWord, user.secretWord);
     const comparedPass = await bcrypt.compare(newPassword, user.password);
 
-    if (compared && !comparedPass) {
-      const updatedPassword = await bcrypt.hash(newPassword, 8);
-      const updatedUser = await user.update({ password: updatedPassword });
-
-      if (updatedUser) {
-        const { password, secredWord, ...userInfoWithoutPassword } = updatedUser.toJSON();
-        const token = await jwtAuth.sign({ ...userInfoWithoutPassword });
-        const userInfo = await getResponseUserInfo(userInfoWithoutPassword);
-
-        ctx.body = { token, ...userInfo };
-      }
+    if (comparedSecretWord && !comparedPass) {
+      const {token, userInfo, error} = await updateUserPassword(user, newPassword);
+      ctx.body = error ? { token, ...userInfo } : {error};
+      return;
     }
     if (comparedPass) {
-      return equalPasswordsError(ctx);
+      equalPasswordsError(ctx);
+      return;
     }
-    return setForbidden(ctx);
+    setForbidden(ctx);
   } catch (error) {
     console.error('restore password error: ', error);
-    throw Error(error);
+    ctx.body = {
+      error,
+    };
   }
 }
 

@@ -1,6 +1,8 @@
 const models = require('models');
-const { auth, setBadRequest } = require('../controllers/auth');
-const {getUserById, getPostById} = require('../utils');
+const {getUserById} = require('src/services/user');
+const {auth} = require('src/middleware/auth');
+const {setBadRequest} = require('src/middleware/exception');
+const {getPostById} = require('../utils');
 
 async function commentList(ctx, next) {
   try {

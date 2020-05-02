@@ -10,6 +10,7 @@ module.exports = {
     url: DEV_DATABASE_URL,
     dialect: 'postgres',
     use_env_variable: 'url',
+    logging: false,
   },
   test: {
     url: TEST_DATABASE_URL,

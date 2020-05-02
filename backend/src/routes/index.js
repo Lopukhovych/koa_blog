@@ -2,7 +2,7 @@ const Router = require('koa-router');
 const {createReadStream} = require('fs');
 const path = require('path');
 
-const {authAdmin} = require('src/utils/auth');
+const {authAdmin} = require('src/middleware/auth');
 const info = require('./generalInfo');
 const post = require('./post');
 const comments = require('./comments');
