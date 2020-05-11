@@ -3,7 +3,7 @@ const {createReadStream} = require('fs');
 const path = require('path');
 
 const {adminAuth} = require('src/middleware/auth.middleware');
-const info = require('./generalInfo');
+const info = require('./generalInfo.router');
 const post = require('./post');
 const comments = require('./comments.router');
 const auth = require('./auth.router');
