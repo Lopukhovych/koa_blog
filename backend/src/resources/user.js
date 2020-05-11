@@ -5,7 +5,7 @@ async function createUser(userData) {
 }
 
 async function findOneUser(condition) {
-  return models.Users.findOne({ where: { ...condition }, raw: true });
+  return models.Users.findOne({ where: { ...condition }});
 }
 
 module.exports = {

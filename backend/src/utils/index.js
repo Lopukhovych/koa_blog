@@ -22,24 +22,6 @@ async function getCommentListToPost(postId) {
   return comments;
 }
 
-async function getUserById(id) {
-  try {
-    return models.Users.findOne({ where: { id }, raw: true });
-  } catch (error) {
-    console.error('getUserById error: ', error.message);
-    return error;
-  }
-}
-
-async function getPostById(id) {
-  try {
-    return models.Post.findOne({ where: { id }, raw: true });
-  } catch (error) {
-    console.error('GetPostById error: ', error.message);
-    return error;
-  }
-}
-
 async function getCategoryList() {
   return models.Category
     .findAll({
@@ -75,8 +57,6 @@ async function getShortActiveUserInfo() {
 
 module.exports = {
   getCommentListToPost,
-  getUserById,
-  getPostById,
   getCategoryList,
   getCategoryById,
   getActiveUserList,

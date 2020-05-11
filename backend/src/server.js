@@ -5,7 +5,7 @@ const serve = require('koa-static');
 const path = require('path');
 
 const {notFound, unauthorized} = require('src/middleware/notFound');
-const {handleException} = require('src/middleware/exception');
+const {handleException} = require('src/middleware/exception.middleware');
 const app = require('./app');
 const {sequelize} = require('../models');
 const router = require('./routes');
@@ -45,7 +45,7 @@ app.use(mount('/', serve('./public')));
 app.use(notFound);
 
 app.on('error', (err) => {
-  console.error('server error', err);
+  console.error('Error server', err);
 });
 
 let server;

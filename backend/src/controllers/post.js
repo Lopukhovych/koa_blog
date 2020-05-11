@@ -1,14 +1,14 @@
 const { articleStatus } = require('src/constants');
 const models = require('models');
 const Sequelize = require('sequelize');
-const {getUserById} = require('src/services/user');
+const {getUserById} = require('src/services/user.service');
 const {
   getCommentListToPost,
   getCategoryList,
   getShortActiveUserInfo,
   getCategoryById,
 } = require('src/utils');
-const {setBadRequest} = require('src/middleware/exception');
+const {setBadRequest} = require('src/middleware/exception.middleware');
 
 const {Op} = Sequelize;
 const DefaultLoadLimit = 5;

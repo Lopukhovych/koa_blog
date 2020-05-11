@@ -16,7 +16,7 @@ async function handleException(ctx, next) {
 async function setUnauthorized(ctx) {
   return ctx.throw(
     401,
-    'UNAUTHORIZED',
+    'Unauthorized',
     { headers: { 'WWW-Authenticate': 'Basic realm="Secure Area"' } },
   );
 }
@@ -24,17 +24,17 @@ async function setUnauthorized(ctx) {
 async function setForbidden(ctx) {
   return ctx.throw(
     403,
-    'FORBIDDEN',
+    'Forbidden',
     { headers: { 'WWW-Authenticate': 'Basic realm="Secure Area"' } },
   );
 }
 
 async function setBadRequest(ctx, error) {
-  ctx.status = 400;
-  ctx.body = {
-    originalError: 'Bad Request',
-    message: error.message,
-  };
+  return ctx.throw(
+    400,
+    'Bad Request',
+    error,
+  );
 }
 
 module.exports = {

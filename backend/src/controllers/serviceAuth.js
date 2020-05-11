@@ -1,5 +1,5 @@
 const {google: {getGoogleAccessData, getGoogleUserData}, jwtAuth} = require('src/auth');
-const {createGoogleUser, getResponseUserInfo} = require('src/services/user');
+const {createGoogleUser, getResponseUserInfo} = require('src/services/user.service');
 
 async function googleLogin(ctx) {
   const {code, returnSecureToken} = ctx.request.body;

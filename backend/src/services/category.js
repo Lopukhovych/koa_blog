@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const {proceedAuthorInfo} = require('src/utils/author');
 
 const {articleStatus} = require('src/constants');
 const {
@@ -39,12 +40,7 @@ async function getCategoryInfo(id) {
 async function getCategoryPostListWithDetails(categoryId) {
   const postList = await findCategoryPostListWithUserAndDetails(categoryId);
 
-  postList.forEach((post) => {
-    if (post['author.userInfo'] && post['author.userInfo'].name) {
-      post['author.name'] = post['author.userInfo'].name;
-      delete post['author.userInfo'];
-    }
-  });
+  postList.forEach(proceedAuthorInfo);
   return postList;
 }
 

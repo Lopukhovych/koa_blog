@@ -1,9 +1,8 @@
 const Sequelize = require('sequelize');
 const bcrypt = require('bcryptjs');
-const models = require('models/index');
+const models = require('models');
 const { userStatus} = require('src/constants');
-const { createCustomUser } = require('src/services/user');
-const {getUserByEmail} = require('src/services/email');
+const { createCustomUser, getUserByEmail } = require('src/services/user.service');
 
 const {Op} = Sequelize;
 async function getUserList(ctx) {

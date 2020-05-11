@@ -7,8 +7,8 @@ const {
   updateCategory,
   deleteCategory,
 } = require('src/services/category');
-const {authAdmin} = require('src/middleware/auth');
-const {setBadRequest} = require('src/middleware/exception');
+const {adminAuth} = require('src/middleware/auth.middleware');
+const {setBadRequest} = require('src/middleware/exception.middleware');
 
 async function categoryList(ctx) {
   try {
@@ -50,7 +50,7 @@ async function categoryDetail(ctx) {
 
 async function categoryCreate(ctx, next) {
   try {
-    await authAdmin(ctx, next);
+    await adminAuth(ctx, next);
 
 
     const {title} = ctx.request.body;
@@ -76,7 +76,7 @@ async function categoryCreate(ctx, next) {
 
 async function categoryUpdate(ctx, next) {
   try {
-    await authAdmin(ctx, next);
+    await adminAuth(ctx, next);
 
     const {id} = ctx.params;
     const {category} = ctx.request.body;
@@ -105,7 +105,7 @@ async function categoryUpdate(ctx, next) {
 
 async function categoryDelete(ctx, next) {
   try {
-    await authAdmin(ctx, next);
+    await adminAuth(ctx, next);
 
     const {id} = ctx.params;
 

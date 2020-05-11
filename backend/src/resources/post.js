@@ -33,8 +33,18 @@ async function getPostById(id) {
   return models.Post.findByPk(id);
 }
 
+async function findPublishedPostById(id) {
+  return models.Post.findOne({
+    where: {
+      id: +id,
+      status: articleStatus.published,
+    },
+  });
+}
+
 module.exports = {
   findPostList,
   findCategoryPostListWithUserAndDetails,
   getPostById,
+  findPublishedPostById,
 };

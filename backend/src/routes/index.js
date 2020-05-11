@@ -2,11 +2,11 @@ const Router = require('koa-router');
 const {createReadStream} = require('fs');
 const path = require('path');
 
-const {authAdmin} = require('src/middleware/auth');
+const {adminAuth} = require('src/middleware/auth.middleware');
 const info = require('./generalInfo');
 const post = require('./post');
-const comments = require('./comments');
-const auth = require('./auth');
+const comments = require('./comments.router');
+const auth = require('./auth.router');
 const user = require('./user');
 const category = require('./category');
 
@@ -20,7 +20,7 @@ router = info(router);
 router = category(router);
 
 router.get('/second_route', async (ctx, next) => {
-  await authAdmin(ctx, next);
+  await adminAuth(ctx, next);
   const body = await JSON.stringify({hello: 'hello'});
   ctx.body = {body};
 });

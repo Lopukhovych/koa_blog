@@ -1,16 +1,17 @@
 const bcrypt = require('bcryptjs');
 const {jwtAuth} = require('src/auth');
 const models = require('models');
-const {userStatus, userRoles} = require('../constants');
-const {createUser} = require('../resources/user');
+const {userStatus, userRoles} = require('src/constants');
+const {createUser, findOneUser} = require('src/resources/user');
+const {verifyToken} = require('./auth.service');
 
 
 async function getResponseUserInfo(user) {
+  const {
+    id, email, roleId, userInfo,
+  } = user;
   return {
-    id: user.id,
-    email: user.email,
-    roleId: user.roleId,
-    ...user.userInfo,
+    id, email, roleId, ...userInfo,
   };
 }
 
@@ -113,12 +114,52 @@ async function updateUserPassword(user, newPassword) {
 
 async function getUserById(id) {
   try {
-    return models.Users.findOne({ where: { id }, raw: true });
+    const user = await findOneUser({id});
+    if (!user) {
+      throw new Error(`No user with id: ${id}`);
+    }
+    return user;
   } catch (error) {
-    console.error('getUserById error: ', error.message);
-    return error;
+    console.error('Error getUserById:', id);
+    throw new Error('Cannot find user');
   }
 }
+
+async function findUserFromJwt(token) {
+  try {
+    const {id} = await verifyToken(token);
+    return getUserById(id);
+  } catch (error) {
+    console.error('Error_service findUserFromJwt:', error);
+    throw new Error('Cannot find user');
+  }
+}
+
+async function getUserByEmail(email) {
+  try {
+    const user = await findOneUser({email: email.toString()});
+    if (!user) {
+      throw new Error('No user with entered email');
+    }
+    return user;
+  } catch (error) {
+    console.error('Error_service getUserByEmail:', error);
+    throw new Error('Cannot find user');
+  }
+}
+
+async function validateVacantEmail(email) {
+  try {
+    const user = await findOneUser({email: email.toString()});
+    if (user) {
+      throw new Error();
+    }
+  } catch (error) {
+    console.error('Error_service validateVacantEmail:', error);
+    throw new Error('User with such email already exist');
+  }
+}
+
 
 module.exports = {
   createGoogleUser,
@@ -127,4 +168,7 @@ module.exports = {
   createCustomUser,
   updateUserPassword,
   getUserById,
+  findUserFromJwt,
+  getUserByEmail,
+  validateVacantEmail,
 };
