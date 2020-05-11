@@ -4,7 +4,6 @@ const models = require('models');
 async function findAllCategories() {
   return models.Category.findAll({
     attributes: ['id', 'title'],
-    raw: true,
   });
 }
 

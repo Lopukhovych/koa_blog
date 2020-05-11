@@ -8,7 +8,7 @@ const post = require('./post');
 const comments = require('./comments.router');
 const auth = require('./auth.router');
 const user = require('./user');
-const category = require('./category');
+const category = require('./category.router');
 
 let router = new Router();
 

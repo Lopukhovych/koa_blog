@@ -2,8 +2,17 @@ const models = require('models');
 const Sequelize = require('sequelize');
 const {articleStatus} = require('src/constants');
 
-async function findPostList(options = {}) {
-  return models.Post.findAll(options);
+async function findPostListByCategoryId(categoryId) {
+  return models.Post.findAll({
+    attributes: ['id', 'title', 'imageUrl'],
+    where: Sequelize.and(
+      {categoryId},
+      {status: articleStatus.published},
+    ),
+    order: [['viewNumber', 'DESC']],
+    limit: 3,
+    raw: true,
+  });
 }
 
 async function findCategoryPostListWithUserAndDetails(categoryId = 0) {
@@ -43,7 +52,7 @@ async function findPublishedPostById(id) {
 }
 
 module.exports = {
-  findPostList,
+  findPostListByCategoryId,
   findCategoryPostListWithUserAndDetails,
   getPostById,
   findPublishedPostById,

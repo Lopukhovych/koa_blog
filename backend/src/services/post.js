@@ -1,4 +1,4 @@
-const {findPublishedPostById} = require('src/resources/post');
+const {findPublishedPostById} = require('src/resources/post.resource');
 
 async function getPostById(id) {
   try {
