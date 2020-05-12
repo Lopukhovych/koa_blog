@@ -10,12 +10,12 @@ const {
   deleteComment,
 } = require('src/services/comments.service');
 const {getUserById, findUserFromJwt} = require('src/services/user.service');
-const {getPPostById} = require('src/services/post');
+const {getPPostById} = require('src/services/post.service');
 
-async function commentList(ctx, next) {
+async function commentList(ctx) {
   try {
     const {id} = ctx.params;
-    await auth(ctx, next);
+    await auth(ctx);
 
     const comments = await getPostCommentList(id);
 
@@ -27,10 +27,10 @@ async function commentList(ctx, next) {
   }
 }
 
-async function commentDetail(ctx, next) {
+async function commentDetail(ctx) {
   try {
     const {id} = ctx.params;
-    await auth(ctx, next);
+    await auth(ctx);
 
     const commentDetails = await getCommentDetails(id);
 
@@ -42,11 +42,11 @@ async function commentDetail(ctx, next) {
   }
 }
 
-async function commentCreate(ctx, next) {
+async function commentCreate(ctx) {
   try {
     const {authorization: token} = ctx.request.header;
     const {postId, comment} = ctx.request.body;
-    await auth(ctx, next);
+    await auth(ctx);
 
     const user = await findUserFromJwt(token);
     const post = await getPPostById(postId);
@@ -61,10 +61,10 @@ async function commentCreate(ctx, next) {
   }
 }
 
-async function customCommentCreate(ctx, next) {
+async function customCommentCreate(ctx) {
   try {
     const {userId, postId, comment} = ctx.request.body;
-    await moderatorAuth(ctx, next);
+    await moderatorAuth(ctx);
 
     const user = await getUserById(userId);
     const post = await getPPostById(postId);
@@ -79,11 +79,11 @@ async function customCommentCreate(ctx, next) {
   }
 }
 
-async function commentUpdate(ctx, next) {
+async function commentUpdate(ctx) {
   try {
     const {authorization: token} = ctx.request.header;
     const {id} = ctx.params;
-    await auth(ctx, next);
+    await auth(ctx);
 
     const {comment: newComment} = ctx.request.body;
 
@@ -100,11 +100,11 @@ async function commentUpdate(ctx, next) {
   }
 }
 
-async function commentDelete(ctx, next) {
+async function commentDelete(ctx) {
   try {
     const {id} = ctx.params;
     const {authorization: token} = ctx.request.header;
-    await auth(ctx, next);
+    await auth(ctx);
 
     const user = await findUserFromJwt(token);
     const comment = await getCommentById(id);

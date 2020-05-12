@@ -10,7 +10,7 @@ async function findRoleByTitle(title) {
   return models.Role.findOne({ where: { title }, raw: true });
 }
 
-async function findModeratorIds() {
+async function findModeratorPermissionIds() {
   return models.Role
     .findAll({
       attributes: ['id'],
@@ -24,6 +24,21 @@ async function findModeratorIds() {
     }).then(async (list) => list.map((item) => item.id));
 }
 
+async function findAuthorPermissionIds() {
+  return models.Role
+    .findAll({
+      attributes: ['id'],
+      where: {
+        [Op.or]: [
+          { title: userRoles.admin },
+          { title: userRoles.moderator },
+          { title: userRoles.author },
+        ],
+      },
+      raw: true,
+    }).then(async (list) => list.map((item) => item.id));
+}
+
 async function findAdminRole() {
   return models.Role.findOne({where: {title: userRoles.admin}});
 }
@@ -31,6 +46,7 @@ async function findAdminRole() {
 module.exports = {
   findByRoleId,
   findRoleByTitle,
-  findModeratorIds,
+  findModeratorPermissionIds,
   findAdminRole,
+  findAuthorPermissionIds,
 };

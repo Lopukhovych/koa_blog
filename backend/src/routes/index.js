@@ -4,7 +4,7 @@ const path = require('path');
 
 const {adminAuth} = require('src/middleware/auth.middleware');
 const info = require('./generalInfo.router');
-const post = require('./post');
+const post = require('./post.router');
 const comments = require('./comments.router');
 const auth = require('./auth.router');
 const user = require('./user');
@@ -19,8 +19,8 @@ router = user(router);
 router = info(router);
 router = category(router);
 
-router.get('/second_route', async (ctx, next) => {
-  await adminAuth(ctx, next);
+router.get('/second_route', async (ctx) => {
+  await adminAuth(ctx);
   const body = await JSON.stringify({hello: 'hello'});
   ctx.body = {body};
 });

@@ -38,11 +38,11 @@ async function categoryDetail(ctx) {
   }
 }
 
-async function categoryCreate(ctx, next) {
+async function categoryCreate(ctx) {
   try {
     const {title} = ctx.request.body;
 
-    await moderatorAuth(ctx, next);
+    await moderatorAuth(ctx);
     await validateCategoryCreateData(title);
 
     const category = await createNewCategory(title, ['id', 'title', 'createdAt']);
@@ -57,12 +57,12 @@ async function categoryCreate(ctx, next) {
   }
 }
 
-async function categoryUpdate(ctx, next) {
+async function categoryUpdate(ctx) {
   try {
     const {id} = ctx.params;
     const {category} = ctx.request.body;
 
-    await moderatorAuth(ctx, next);
+    await moderatorAuth(ctx);
 
     const updatedCategory = await updateCategory(id, category);
     ctx.status = 200;
@@ -75,10 +75,10 @@ async function categoryUpdate(ctx, next) {
   }
 }
 
-async function categoryDelete(ctx, next) {
+async function categoryDelete(ctx) {
   try {
     const {id} = ctx.params;
-    await moderatorAuth(ctx, next);
+    await moderatorAuth(ctx);
 
     await deleteCategory(id);
 

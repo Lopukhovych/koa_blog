@@ -5,7 +5,7 @@ const {
   createComment,
 } = require('src/resources/comments.resource');
 const {proceedAuthorInfo} = require('src/utils/author');
-const {findModeratorIds} = require('src/resources/roles');
+const {findModeratorPermissionIds} = require('src/resources/roles');
 
 
 async function getPostCommentList(id) {
@@ -45,7 +45,7 @@ async function getCommentById(id) {
     }
     return comment;
   } catch (error) {
-    console.error('getCommentById: ', error);
+    console.error('Error_service getCommentById:', error);
     throw new Error('Cannot find comment');
   }
 }
@@ -65,7 +65,7 @@ async function createNewComment({user: {id: userId, email: userEmail}, post: {id
       postId,
     };
   } catch (error) {
-    console.error('Error_service createNewComment: ', error.message);
+    console.error('Error_service createNewComment:', error.message);
     throw new Error('Cannot create new comment, try later or login');
   }
 }
@@ -74,13 +74,13 @@ async function checkCommentModifyPermissions(user, comment) {
   try {
     const {id, roleId} = user;
     const {userId: authorId} = comment;
-    const moderatorIds = await findModeratorIds();
+    const moderatorIds = await findModeratorPermissionIds();
     if (moderatorIds.includes(roleId) || id === authorId) {
       return;
     }
     throw new Error(`User with id ${id} cannot not change this comment`);
   } catch (error) {
-    console.error('Error_service:', error.message);
+    console.error('Error_service checkCommentModifyPermissions:', error.message);
     throw new Error('Invalid permissions');
   }
 }
@@ -91,7 +91,7 @@ async function updateComment(comment, newComment) {
       comment: newComment,
     });
   } catch (error) {
-    console.error('updateComment: ', error);
+    console.error('Error_service updateComment:', error.message);
     throw new Error('Comment cannot be updated');
   }
 }
@@ -100,7 +100,7 @@ async function deleteComment(comment) {
   try {
     await comment.destroy();
   } catch (error) {
-    console.error('deleteComment: ', error);
+    console.error('Error_service deleteComment: ', error.message);
     throw new Error('Cannot delete a comment');
   }
 }

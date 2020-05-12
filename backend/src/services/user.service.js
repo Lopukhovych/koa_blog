@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const {jwtAuth} = require('src/auth');
 const models = require('models');
 const {userStatus, userRoles} = require('src/constants');
-const {createUser, findOneUser} = require('src/resources/user');
+const {createUser, findOneUser, findAllActiveUsers} = require('src/resources/user.resource');
 const {verifyToken} = require('./auth.service');
 
 
@@ -160,6 +160,15 @@ async function validateVacantEmail(email) {
   }
 }
 
+async function getAllActiveUsers(attributes = []) {
+  try {
+    return findAllActiveUsers(attributes);
+  } catch (error) {
+    console.error('Error_service validateVacantEmail:', error);
+    throw new Error('Cannot get users information');
+  }
+}
+
 
 module.exports = {
   createGoogleUser,
@@ -171,4 +180,5 @@ module.exports = {
   findUserFromJwt,
   getUserByEmail,
   validateVacantEmail,
+  getAllActiveUsers,
 };

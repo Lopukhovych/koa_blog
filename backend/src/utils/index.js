@@ -22,14 +22,6 @@ async function getCommentListToPost(postId) {
   return comments;
 }
 
-async function getCategoryList() {
-  return models.Category
-    .findAll({
-      attributes: ['id', 'title'],
-      raw: true,
-    });
-}
-
 async function getCategoryById(categoryId) {
   return models.Category.findOne({where: {id: categoryId}, raw: true });
 }
@@ -57,7 +49,6 @@ async function getShortActiveUserInfo() {
 
 module.exports = {
   getCommentListToPost,
-  getCategoryList,
   getCategoryById,
   getActiveUserList,
   getShortActiveUserInfo,
