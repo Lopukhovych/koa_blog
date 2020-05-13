@@ -1,115 +1,175 @@
-const bcrypt = require('bcryptjs');
-const {jwtAuth} = require('src/auth');
-const models = require('models');
 const {userStatus, userRoles} = require('src/constants');
-const {createUser, findOneUser, findAllActiveUsers} = require('src/resources/user.resource');
+const {
+  createUser, findOneUser, findAllActiveUsers, findAllUsers,
+} = require('src/resources/user.resource');
+const {findModeratorPermissionIds} = require('src/resources/roles.resource');
 const {verifyToken} = require('./auth.service');
-
+const {hashPassword} = require('./password.service');
+const {hashSecretWord} = require('./secredWord.service');
+const {getRoleByTitle} = require('./role.service');
 
 async function getResponseUserInfo(user) {
-  const {
-    id, email, roleId, userInfo,
-  } = user;
-  return {
-    id, email, roleId, ...userInfo,
-  };
+  try {
+    const {
+      id, email, roleId, userInfo,
+    } = user;
+    return {
+      id, email, roleId, ...userInfo,
+    };
+  } catch (error) {
+    console.error('Error_service getResponseUserInfo:', error);
+    throw new Error('Cannot get user information');
+  }
+}
+
+async function updateUser(user, newData) {
+  try {
+    await user.update(newData);
+  } catch (error) {
+    console.error('Error_service updateUser:', error);
+    throw new Error('Cannot update user');
+  }
+}
+
+async function deleteUser(user) {
+  try {
+    await user.destroy();
+  } catch (error) {
+    console.error('Error_service deleteUser:', error.message);
+    throw new Error('Cannot delete user');
+  }
 }
 
 async function createGoogleUser({
   id, email, verified_email, name, picture, locale,
 }, returnSecureToken, refreshToken) {
-  const refreshData = {
-    service: 'google',
-    refreshToken,
-  };
+  try {
+    const refreshData = {
+      service: 'google',
+      refreshToken,
+    };
 
-  const existingUser = await models.Users
-    .findOne({where: {googleId: id}})
-    .then(async (record) => (record ? record.update({refreshData}, {raw: true}) : null))
-    .catch(async (error) => {
-      console.log('error: ', error);
-      return null;
-    });
+    const existingUser = await findOneUser({googleId: id});
 
-  if (existingUser) {
-    return existingUser;
+    if (existingUser) {
+      await updateUser(existingUser, {refreshData});
+      return existingUser;
+    }
+
+    const {id: roleId} = await getRoleByTitle(userRoles.user);
+
+    const userData = {
+      email,
+      password: null,
+      secretWord: null,
+      status: userStatus.active,
+      roleId,
+      googleId: id,
+      userInfo: {
+        name,
+        picture,
+        returnSecureToken,
+      },
+      refreshData,
+    };
+    return createUser(userData);
+  } catch (error) {
+    console.error('Error_service createGoogleUser:', error);
+    throw new Error('Cannot get user information');
   }
-  const userRole = await models.Role.findOne({where: {title: userRoles.user}, raw: true});
-  const userData = {
-    email,
-    password: null,
-    secretWord: null,
-    status: userStatus.active,
-    roleId: +userRole.id,
-    googleId: id,
-    userInfo: {
-      name,
-      picture,
-      returnSecureToken,
-    },
-    refreshData,
-  };
-  return createUser(userData);
 }
 
 async function createCustomUser({
   email, password, role, age, name, secretWord, status,
 }) {
-  let enteredRole = null;
-  if (role) {
-    try {
-      enteredRole = await models.Role.findOne({ where: { title: role.toString() }, raw: true });
-    } catch (err) {
-      console.error(`Role ${role} does not exist`);
-    }
-  }
-  if (!enteredRole) {
-    enteredRole = await models.Role.findOne({ where: { title: userRoles.user }, raw: true });
-  }
+  try {
+    const {id: roleId} = role ? await getRoleByTitle(role) : await getRoleByTitle(userRoles.user);
+    const newPassword = await hashPassword(password);
+    const newSecretWord = secretWord && await hashSecretWord(password);
+    const newUserStatus = userStatus[status] || userStatus.pending;
 
-  const userData = {
-    email: email.toString(),
-    password: await bcrypt.hash(password, 8),
-    secretWord: secretWord && await bcrypt.hash(secretWord, 10),
-    status: userStatus.pending || userStatus[status],
-    roleId: enteredRole.id,
-    userInfo: {
-      age,
-      name,
-    },
-  };
+    const userData = {
+      email,
+      password: newPassword,
+      secretWord: newSecretWord,
+      status: newUserStatus,
+      roleId,
+      userInfo: {age, name},
+    };
 
-  return createUser(userData);
+    return createUser(userData);
+  } catch (error) {
+    console.error('Error_service createCustomUser:', error);
+    throw new Error('Cannot create user');
+  }
+}
+
+async function updateCustomUser({
+  email, role, status, password, secretWord, age, name,
+}, user) {
+  try {
+    const {id: roleId} = role ? await getRoleByTitle(role) : await getRoleByTitle(userRoles.user);
+    const newPassword = password && await hashPassword(password);
+    const newSecretWord = secretWord && await hashSecretWord(password);
+    const newUserStatus = status && (userStatus[status] || userStatus.pending);
+    const {userInfo} = user;
+    const newUserInfo = {...userInfo};
+
+    ([age, name]).forEach((item) => {
+      if (item) {
+        newUserInfo[item] = item;
+      }
+    });
+
+    const userData = {
+      email,
+      password: newPassword,
+      secretWord: newSecretWord,
+      status: newUserStatus,
+      roleId,
+      userInfo: newUserInfo,
+    };
+
+    await user.update(userData);
+  } catch (error) {
+    console.error('Error_service updateCustomUser:', error);
+    throw new Error('Cannot update user');
+  }
 }
 
 async function createLocalUser({
-  email, password, secretWord, userInfo,
+  email, password, secretWord, name,
 }) {
-  const userRole = await models.Role.findOne({ where: { title: userRoles.user }, raw: true });
-  const userData = {
-    email: email.toString(),
-    password: await bcrypt.hash(password, 8),
-    secretWord: secretWord && await bcrypt.hash(secretWord, 10),
-    status: userStatus.active,
-    roleId: +userRole.id,
-    userInfo,
-  };
+  try {
+    const {id: roleId} = await getRoleByTitle(userRoles.user);
+    const newPassword = await hashPassword(password);
+    const newSecretWord = secretWord && await hashSecretWord(password);
+    const userData = {
+      email,
+      password: newPassword,
+      secretWord: newSecretWord,
+      status: userStatus.active,
+      roleId,
+      userInfo: {
+        name,
+      },
+    };
 
-  return createUser(userData);
+    return createUser(userData);
+  } catch (error) {
+    console.error('Error_service createLocalUser:', error);
+    throw new Error('Cannot create user');
+  }
 }
 
 async function updateUserPassword(user, newPassword) {
-  const updatedPassword = await bcrypt.hash(newPassword, 8);
-  const updatedUser = await user.update({ password: updatedPassword });
-
-  if (updatedUser) {
-    const { password, secredWord, ...userInfoWithoutPassword } = updatedUser.toJSON();
-    const token = await jwtAuth.sign({ ...userInfoWithoutPassword });
-    const userInfo = await getResponseUserInfo(userInfoWithoutPassword);
-
-    return { token, ...userInfo };
+  try {
+    const updatedPassword = await hashPassword(newPassword);
+    await updateUser(user, { password: updatedPassword });
+  } catch (error) {
+    console.error('Error_service updateUserPassword:', error);
+    throw new Error('Cannot create user');
   }
-  return {error: 'Could not update user!'};
 }
 
 async function getUserById(id) {
@@ -120,8 +180,23 @@ async function getUserById(id) {
     }
     return user;
   } catch (error) {
-    console.error('Error getUserById:', id);
+    console.error('Error_service getUserById:', error);
     throw new Error('Cannot find user');
+  }
+}
+
+async function checkGetUserPermissions(user, requestedUser) {
+  try {
+    const {id, roleId} = user;
+    const {id: requestedUserId} = requestedUser;
+    const moderatorIds = await findModeratorPermissionIds();
+    if (moderatorIds.includes(roleId) || id === requestedUserId) {
+      return;
+    }
+    throw new Error(`User with id ${id} cannot not get this user`);
+  } catch (error) {
+    console.error('Error_service checkGetUserPermissions:', error.message);
+    throw new Error('Invalid permissions');
   }
 }
 
@@ -137,7 +212,7 @@ async function findUserFromJwt(token) {
 
 async function getUserByEmail(email) {
   try {
-    const user = await findOneUser({email: email.toString()});
+    const user = await findOneUser({email});
     if (!user) {
       throw new Error('No user with entered email');
     }
@@ -148,24 +223,33 @@ async function getUserByEmail(email) {
   }
 }
 
-async function validateVacantEmail(email) {
+async function checkUserExistByEmail(email) {
   try {
-    const user = await findOneUser({email: email.toString()});
+    const user = await findOneUser({email});
     if (user) {
       throw new Error();
     }
   } catch (error) {
-    console.error('Error_service validateVacantEmail:', error);
-    throw new Error('User with such email already exist');
+    console.error('Error_service checkUserExistByEmail:', error);
+    throw new Error('Email already is used');
   }
 }
 
-async function getAllActiveUsers(attributes = []) {
+async function getAllActiveUsers(attributes) {
   try {
     return findAllActiveUsers(attributes);
   } catch (error) {
-    console.error('Error_service validateVacantEmail:', error);
+    console.error('Error_service getAllActiveUsers:', error);
     throw new Error('Cannot get users information');
+  }
+}
+
+async function getAllUsers(attributes) {
+  try {
+    return findAllUsers(attributes);
+  } catch (error) {
+    console.error('Error_service getUserList:', error);
+    throw new Error('Cannot get users');
   }
 }
 
@@ -179,6 +263,10 @@ module.exports = {
   getUserById,
   findUserFromJwt,
   getUserByEmail,
-  validateVacantEmail,
   getAllActiveUsers,
+  checkGetUserPermissions,
+  getAllUsers,
+  checkUserExistByEmail,
+  updateCustomUser,
+  deleteUser,
 };

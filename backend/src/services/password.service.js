@@ -24,7 +24,7 @@ async function validateRestorePassData(email, enteredSecretWord, newPassword) {
   }
 }
 
-async function validatEnteredPassword(user, newPassword, enteredSecretWord) {
+async function validateEnteredPassword(user, newPassword, enteredSecretWord) {
   try {
     const {secretWord, password} = user;
     const comparedSecretWord = await bcrypt.compare(enteredSecretWord, secretWord);
@@ -43,8 +43,13 @@ async function validatEnteredPassword(user, newPassword, enteredSecretWord) {
   }
 }
 
+async function hashPassword(password) {
+  return bcrypt.hash(password, 8);
+}
+
 module.exports = {
   comparePassword,
   validateRestorePassData,
-  validatEnteredPassword,
+  validateEnteredPassword,
+  hashPassword,
 };

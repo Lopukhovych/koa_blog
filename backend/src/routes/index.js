@@ -1,13 +1,10 @@
 const Router = require('koa-router');
-const {createReadStream} = require('fs');
-const path = require('path');
 
-const {adminAuth} = require('src/middleware/auth.middleware');
 const info = require('./generalInfo.router');
 const post = require('./post.router');
 const comments = require('./comments.router');
 const auth = require('./auth.router');
-const user = require('./user');
+const user = require('./user.router');
 const category = require('./category.router');
 
 let router = new Router();
@@ -18,22 +15,5 @@ router = auth(router);
 router = user(router);
 router = info(router);
 router = category(router);
-
-router.get('/second_route', async (ctx) => {
-  await adminAuth(ctx);
-  const body = await JSON.stringify({hello: 'hello'});
-  ctx.body = {body};
-});
-
-router.get('/something', (ctx) => {
-  ctx.body = {
-    something: 'something here123',
-  };
-});
-
-router.get('/', (ctx) => {
-  ctx.type = 'html';
-  ctx.body = createReadStream(path.join(path.basename('./public'), 'index.html'));
-});
 
 module.exports = router;

@@ -10,9 +10,7 @@ const {
   deletePost,
 } = require('src/services/post.service');
 const {authorAuth, auth} = require('src/middleware/auth.middleware');
-const {
-  getCategoryById,
-} = require('src/utils');
+const {getCategoryById} = require('src/services/category.service');
 const {setBadRequest} = require('src/middleware/exception.middleware');
 
 async function postList(ctx) {

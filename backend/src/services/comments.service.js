@@ -4,8 +4,8 @@ const {
   findCommentByPk,
   createComment,
 } = require('src/resources/comments.resource');
-const {proceedAuthorInfo} = require('src/utils/author');
-const {findModeratorPermissionIds} = require('src/resources/roles');
+const {proceedAuthorInfo} = require('src/utils/author.util');
+const {findModeratorPermissionIds} = require('src/resources/roles.resource');
 
 
 async function getPostCommentList(id) {

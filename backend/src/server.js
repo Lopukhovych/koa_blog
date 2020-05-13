@@ -2,9 +2,8 @@ const logger = require('koa-morgan');
 const bodyParser = require('koa-bodyparser');
 const mount = require('koa-mount');
 const serve = require('koa-static');
-const path = require('path');
 
-const {notFound, unauthorized} = require('src/middleware/notFound');
+const {notFound, unauthorized} = require('src/middleware/notFound.middleware');
 const {handleException} = require('src/middleware/exception.middleware');
 const app = require('./app');
 const {sequelize} = require('../models');
@@ -34,7 +33,6 @@ app.use(bodyParser({
   },
 }));
 
-app.use(serve(path.basename('./public')));
 app.use(unauthorized);
 
 app.use(router.routes());

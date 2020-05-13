@@ -5,10 +5,10 @@ const {
   updateUserPassword,
   getUserById,
   getUserByEmail,
-  validateVacantEmail,
+  checkUserExistByEmail,
 } = require('src/services/user.service');
 const {verifyToken, validateSignUpData} = require('src/services/auth.service');
-const {comparePassword, validateRestorePassData, validatEnteredPassword} = require('src/services/password.service');
+const {comparePassword, validateRestorePassData, validateEnteredPassword} = require('src/services/password.service');
 const {checkForRefreshToken, signToken} = require('src/services/token.service');
 
 async function initialize(ctx) {
@@ -47,14 +47,14 @@ async function login(ctx) {
 async function signup(ctx) {
   try {
     const {
-      email, password, secretWord, ...userInfo
+      email, password, secretWord, name,
     } = ctx.request.body;
 
-    await validateSignUpData(email, password, userInfo);
-    await validateVacantEmail(email);
+    await validateSignUpData(email, password);
+    await checkUserExistByEmail(email);
 
     await createLocalUser({
-      email, password, secretWord, userInfo,
+      email, password, secretWord, name,
     });
 
     return login(ctx);
@@ -72,9 +72,12 @@ async function restorePassword(ctx) {
 
     const user = await getUserByEmail(email);
 
-    await validatEnteredPassword(user, newPassword, enteredSecretWord);
+    await validateEnteredPassword(user, newPassword, enteredSecretWord);
+    await updateUserPassword(user, newPassword);
 
-    const {token, userInfo} = await updateUserPassword(user, newPassword);
+    const userInfo = await getResponseUserInfo(user);
+    const token = await signToken(userInfo);
+
     ctx.status = 200;
     ctx.body = { token, ...userInfo };
   } catch (error) {

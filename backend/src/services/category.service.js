@@ -1,4 +1,4 @@
-const {proceedAuthorInfo} = require('src/utils/author');
+const {proceedAuthorInfo} = require('src/utils/author.util');
 const {
   findPostListByCategoryId,
   findCategoryPostListWithUserAndDetails,
@@ -97,6 +97,19 @@ async function deleteCategory(id) {
   }
 }
 
+async function getCategoryById(categoryId) {
+  try {
+    const category = await findCategoryByPk(categoryId);
+    if (!category) {
+      throw new Error();
+    }
+    return category;
+  } catch (error) {
+    console.error('Error_service getCategoryById:', error);
+    throw new Error('Invalid category data');
+  }
+}
+
 module.exports = {
   getTransformedCategoryList,
   getAllCategories,
@@ -106,4 +119,5 @@ module.exports = {
   updateCategory,
   deleteCategory,
   validateCategoryCreateData,
+  getCategoryById,
 };

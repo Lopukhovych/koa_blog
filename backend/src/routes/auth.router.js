@@ -1,5 +1,5 @@
 const authController = require('src/controllers/auth.controller');
-const socialAuthController = require('src/controllers/serviceAuth');
+const socialAuthController = require('src/controllers/serviceAuth.controller');
 
 module.exports = (router) => {
   router.post('/login', authController.login);

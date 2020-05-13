@@ -5,7 +5,7 @@ const {
   createPost,
 } = require('src/resources/post.resource');
 const { articleStatus } = require('src/constants');
-const {findModeratorPermissionIds} = require('src/resources/roles');
+const {findModeratorPermissionIds} = require('src/resources/roles.resource');
 
 const DefaultLoadLimit = 5;
 

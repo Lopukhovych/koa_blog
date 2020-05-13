@@ -13,9 +13,9 @@ async function verifyToken(token) {
   }
 }
 
-async function validateSignUpData(email, password, userInfo) {
+async function validateSignUpData(email, password) {
   try {
-    if (!userInfo || !userInfo.name || !password || !email) {
+    if (!password || !email) {
       throw new Error();
     }
     return;

@@ -7,7 +7,7 @@ async function findByRoleId(id) {
 }
 
 async function findRoleByTitle(title) {
-  return models.Role.findOne({ where: { title }, raw: true });
+  return models.Role.findOne({ where: { title }});
 }
 
 async function findModeratorPermissionIds() {
