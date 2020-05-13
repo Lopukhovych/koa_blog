@@ -2,7 +2,9 @@ import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {passwordControl, updateFormControlsHandler} from 'src/core/formHandler.helper';
 import LoginView from './Login.view';
-import {loginUser as loginUserAction} from './redux/actions';
+import {loginUser as loginUserAction, loginGoogleUser as loginGoogleUserAction} from './redux/actions';
+
+const redirectURL = '' || process.env.REACT_APP_URL;
 
 
 class LoginContainer extends PureComponent {
@@ -44,6 +46,7 @@ class LoginContainer extends PureComponent {
       formIsValid: false,
       errorMessage: null,
     };
+    this.responseGoogle = this.responseGoogle.bind(this);
   }
 
   static getDerivedStateFromProps(props) {
@@ -61,34 +64,42 @@ class LoginContainer extends PureComponent {
     this.setState(updateFormControlsHandler(value, controlName, controls));
   };
 
-    submitFormHandler = (e) => {
-      e.preventDefault();
-      const {controls, formIsValid} = this.state;
-      const {loginUser} = this.props;
-      if (formIsValid) {
-        const loginValues = {};
-        Object.keys(controls).forEach((key) => {
-          loginValues[key] = controls[key].value;
-        });
-        loginUser(loginValues);
-      }
-    };
-
-
-    render() {
-      const {controls, formIsValid, errorMessage} = this.state;
-      const {showLabel} = this.props;
-      return (
-        <LoginView
-          controls={controls}
-          formIsValid={formIsValid}
-          showLabel={showLabel}
-          changeFormValueHandler={this.changeFormValueHandler}
-          submitFormHandler={this.submitFormHandler}
-          errorMessage={errorMessage}
-        />
-      );
+  submitFormHandler = (e) => {
+    e.preventDefault();
+    const {controls, formIsValid} = this.state;
+    const {loginUser} = this.props;
+    if (formIsValid) {
+      const loginValues = {};
+      Object.keys(controls).forEach((key) => {
+        loginValues[key] = controls[key].value;
+      });
+      loginUser(loginValues);
     }
+  };
+
+  responseGoogle = (data) => {
+    const {loginGoogleUser} = this.props;
+    console.log('responseGoogle: ', data);
+    loginGoogleUser(data);
+  };
+
+
+  render() {
+    const {controls, formIsValid, errorMessage} = this.state;
+    const {showLabel} = this.props;
+    return (
+      <LoginView
+        controls={controls}
+        formIsValid={formIsValid}
+        showLabel={showLabel}
+        changeFormValueHandler={this.changeFormValueHandler}
+        submitFormHandler={this.submitFormHandler}
+        errorMessage={errorMessage}
+        redirectPath={redirectURL}
+        responseGoogle={this.responseGoogle}
+      />
+    );
+  }
 }
 
 const mapStateToProps = ({login}) => ({
@@ -97,6 +108,7 @@ const mapStateToProps = ({login}) => ({
 
 const mapDispatchToProps = {
   loginUser: loginUserAction,
+  loginGoogleUser: loginGoogleUserAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginContainer);

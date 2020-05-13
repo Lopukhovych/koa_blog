@@ -7,7 +7,7 @@ import HomePopularNewsContainer from 'src/Home/HomePopularNews';
 
 
 const containerWrapperStyles = css({
-  width: '90%',
+  width: '96vw',
   margin: '0 auto',
   maxWidth: '1200px',
   minWidth: '700px',

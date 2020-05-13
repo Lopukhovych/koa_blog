@@ -14,7 +14,7 @@ class AuthorizationContainer extends PureComponent {
   static getDerivedStateFromProps(nextProp) {
     const {userData, history} = nextProp;
     if (userData && Object.keys(userData).length) {
-      history.push('/');
+      history.goBack();
     }
     return null;
   }

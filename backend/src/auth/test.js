@@ -1,41 +1,41 @@
-const fs   = require('fs');
-const jwt  = require('jsonwebtoken');
+const fs = require('fs');
+const jwt = require('jsonwebtoken');
 
 async function getPrivateKey() {
-    return fs.readFileSync('./.private.key', 'utf8');
+  return fs.readFileSync('./.private.key', 'utf8');
 }
 
 async function getPublicKey() {
-    return fs.readFileSync('./.public.key', 'utf8');
+  return fs.readFileSync('./.public.key', 'utf8');
 }
-const i  = 'koa_blog';          // Issuer
-const s  = 'koa_blog_admin@user.com';        // Subject
-const a  = 'http://koa.blog'; // Audience
+const i = 'koa_blog'; // Issuer
+const s = 'koa_blog_admin@user.com'; // Subject
+const a = 'http://koa.blog'; // Audience
 // SIGNING OPTIONS
 const signOptions = {
-    issuer:  i,
-    subject:  s,
-    audience:  a,
-    expiresIn:  "2h",
-    algorithm:  "RS256"
+  issuer: i,
+  subject: s,
+  audience: a,
+  expiresIn: '2h',
+  algorithm: 'RS256',
 };
 
 const payload = {
-    data1: "Data 1",
-    data2: "Data 2",
-    data3: "Data 3",
-    data4: "Data 4",
+  data1: 'Data 1',
+  data2: 'Data 2',
+  data3: 'Data 3',
+  data4: 'Data 4',
 };
-const privateKEY  = fs.readFileSync('./.private.key', 'utf8');
-const publicKey  = fs.readFileSync('./.public.key', 'utf8');
+const privateKEY = fs.readFileSync('./.private.key', 'utf8');
+const publicKey = fs.readFileSync('./.public.key', 'utf8');
 console.log('privateKEY: ', privateKEY);
 
-const token =  jwt.sign(payload, privateKEY, signOptions);
+const token = jwt.sign(payload, privateKEY, signOptions);
 
-console.log("Token - " + token);
+console.log(`Token - ${token}`);
 
-var legit = jwt.verify(token, publicKey, signOptions);
-console.log("\nJWT verification result: " + JSON.stringify(legit));
+const legit = jwt.verify(token, publicKey, signOptions);
+console.log(`\nJWT verification result: ${JSON.stringify(legit)}`);
 
 
 // module.exports = getPrivateKey;

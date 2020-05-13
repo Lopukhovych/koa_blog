@@ -1,9 +1,14 @@
 .idea/
 **/node_modules
+**/npm-debug.log
 **/.idea
+/backend/public
 
 **/package-lock.json
 **/.env
 **/setup_backend.txt
 **/yarn.lock
 **/build
+**/public
+**/.DS_Store
+

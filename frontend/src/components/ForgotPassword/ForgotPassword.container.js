@@ -120,7 +120,7 @@ class ForgotPasswordContainer extends PureComponent {
   render() {
     const {controls, formIsValid, errorMessage} = this.state;
     return (
-      <div>
+      <div className="col-xs-12 col-sm-6">
         <ForgotPasswordView
           controls={controls}
           formIsValid={formIsValid}

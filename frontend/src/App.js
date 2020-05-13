@@ -2,6 +2,7 @@
 import {css, jsx} from '@emotion/core';
 import {Route, Switch, Redirect} from 'react-router';
 import {ConnectedRouter} from 'connected-react-router';
+import {Container, Row} from 'react-bootstrap';
 
 import {history} from 'src/config/configureStore';
 import Header from 'src/components/Header';
@@ -17,6 +18,7 @@ import AuthorizationContainer from 'src/Authorization';
 import MyProfileContainer from 'src/MyProfile';
 import CategoryContainer from 'src/Category';
 import RootMiddlewareContainer from 'src/hocs/RootMiddleware';
+import ContactsContainer from 'src/Contacts';
 
 import {mq, smallDesktop} from 'src/core/styles';
 
@@ -30,7 +32,6 @@ const rootStyles = css({
   alignItems: 'stretch',
   maxWidth: '1180px',
   margin: '0 auto',
-  overflow: 'hidden',
 
   [mq[smallDesktop]]: {
     // background: 'red',
@@ -39,7 +40,15 @@ const rootStyles = css({
 
 const mainStyle = css({
   flex: '1 0 auto',
-  margin: '8px 0 22px',
+  margin: '8px 0 0',
+});
+
+const containerWrapperStyles = css({
+  maxWidth: '100%',
+  height: '100%',
+  '& > .row': {
+    height: '100%',
+  },
 });
 
 function App() {
@@ -49,19 +58,24 @@ function App() {
         <RootMiddlewareContainer>
           <Header />
           <main css={mainStyle}>
-            <Switch>
-              <Route exact path="/" component={HomeContainer} />
-              <Redirect exact path="/home" to="/" />
-              <Route path="/author" component={AuthorContainer} />
-              <Route path="/article" component={ArticleContainer} />
-              <Route path="/category" component={CategoryContainer} />
-              <Route path="/about_us" component={AboutUsContainer} />
-              <Route path="/contact_us" component={ContactUsContainer} />
-              <Route path="/auth" component={AuthorizationContainer} />
-              <Route path="/myprofile" component={MyProfileContainer} />
-              <Route path="/not-fount" component={NotFoundContainer} />
-              <Redirect from="*" to="/not-found" />
-            </Switch>
+            <Container fluid css={containerWrapperStyles}>
+              <Row>
+                <Switch>
+                  <Route exact path="/" component={HomeContainer} />
+                  <Redirect exact path="/home" to="/" />
+                  <Route path="/author" component={AuthorContainer} />
+                  <Route path="/article" component={ArticleContainer} />
+                  <Route path="/category" component={CategoryContainer} />
+                  <Route path="/about_us" component={AboutUsContainer} />
+                  <Route path="/contact_us" component={ContactUsContainer} />
+                  <Route path="/contacts" component={ContactsContainer} />
+                  <Route path="/auth" component={AuthorizationContainer} />
+                  <Route path="/myprofile" component={MyProfileContainer} />
+                  <Route path="/not-found" component={NotFoundContainer} />
+                  <Redirect from="*" to="/not-found" />
+                </Switch>
+              </Row>
+            </Container>
           </main>
           <Footer />
         </RootMiddlewareContainer>

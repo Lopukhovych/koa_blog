@@ -4,6 +4,7 @@ import HomeSliderView from './HomeSlider.view';
 
 
 const settings = {
+  className: 'slider variable-width',
   dots: true,
   infinite: true,
   speed: 500,

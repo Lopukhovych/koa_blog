@@ -1,21 +1,25 @@
 /** @jsx jsx */
 import {css, jsx} from '@emotion/core';
 
-import {Card, Container, Row} from 'react-bootstrap';
+import {
+  Card, Container, Row,
+} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 
 const smallArticleStyles = css({
-  height: '13%',
-  maxHeight: '75px',
+  height: '20%',
+  maxHeight: '100px',
+  margin: '2px 0',
+  padding: '0 2px',
 
   '& .article': {
-    padding: '5px',
+    padding: '10px',
     height: '100%',
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'start',
     position: 'relative',
-    paddingLeft: '120px',
+    paddingLeft: '128px',
     cursor: 'pointer',
     flexDirection: 'column',
   },
@@ -59,9 +63,9 @@ const smallArticleStyles = css({
   },
 
   '& .article-meta': {
-    'list-style-type': 'none',
+    listStyleType: 'none',
     position: 'absolute',
-    bottom: '1px',
+    bottom: '8px',
     right: '0',
     display: 'flex',
     justifyContent: 'space-between',
@@ -131,7 +135,7 @@ const mainArticleCardStyles = css({
   },
 
   '& .article-meta': {
-    'list-style-type': 'none',
+    listStyleType: 'none',
     position: 'absolute',
     bottom: '1px',
     right: '0',
@@ -161,7 +165,7 @@ const allPopularArticleLink = css({
 });
 
 const HomePopularNewsView = ({ articleList}) => {
-  const popularArticles = articleList.filter((elem, index) => index < 8).map((article, articleIndex) => (
+  const popularArticles = articleList.filter((elem, index) => index < 6).map((article, articleIndex) => (
     <Card
       key={article.id}
       className={articleIndex === 0 ? 'col-7' : 'align-self-stretch'}
@@ -201,7 +205,7 @@ const HomePopularNewsView = ({ articleList}) => {
         <div className="col-5 d-flex flex-column justify-content-between">
           <h4>Popular News</h4>
           {asideArticles}
-          <Link to="/article" css={allPopularArticleLink}>
+          <Link to="/article/popular" css={allPopularArticleLink}>
             <h6>All popular articles</h6>
           </Link>
         </div>
