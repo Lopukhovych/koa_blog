@@ -1,4 +1,4 @@
-const infoController = require('../controllers/generalInfo');
+const infoController = require('../controllers/generalInfo.controller');
 
 module.exports = (router) => {
   router.get('/about-us', infoController.aboutUsHandler);

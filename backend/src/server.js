@@ -2,13 +2,12 @@ const logger = require('koa-morgan');
 const bodyParser = require('koa-bodyparser');
 const mount = require('koa-mount');
 const serve = require('koa-static');
-const path = require('path');
 
-const {notFound, unauthorized} = require('src/middleware/notFound');
-const {handleException} = require('src/middleware/exception');
+const {notFound, unauthorized} = require('src/middleware/notFound.middleware');
+const {handleException} = require('src/middleware/exception.middleware');
 const app = require('./app');
+const {sequelize} = require('../models');
 const router = require('./routes');
-
 
 const serverPort = process.env.PORT || 3200;
 const serverHost = process.env.HOST || '0.0.0.0';
@@ -34,7 +33,6 @@ app.use(bodyParser({
   },
 }));
 
-app.use(serve(path.basename('./public')));
 app.use(unauthorized);
 
 app.use(router.routes());
@@ -45,31 +43,20 @@ app.use(mount('/', serve('./public')));
 app.use(notFound);
 
 app.on('error', (err) => {
-  console.error('server error', err);
+  console.error('Error server', err);
 });
 
+let server;
 
-const server = app.listen(serverPort, serverHost, () => {
-  console.log('Listening on port %d', serverPort);
-});
+sequelize.sync()
+  .then(() => {
+    server = app.listen(serverPort, serverHost, async () => {
+      console.log('Listening on port %d', serverPort);
+    });
+  });
 
 console.log(`Run server on  http://${serverHost}:${serverPort}`);
 
-exports.closeServer = function () {
+exports.closeServer = () => {
   server.close();
 };
-
-// Implement with admin middleware to check if user is admin
-// var app = require('koa')();
-// var router = require('koa-router')();
-// var compose = require('koa-compose');
-//
-// var allMiddlewares = compose([m1,m2,m3]);
-//
-// router.get('/', allMiddlewares);
-// // selectively enable logging middleware for this route
-// router.get('/test', compose(logger, allMiddlewares));
-//
-// app
-//   .use(router.routes())
-//   .use(router.allowedMethods());

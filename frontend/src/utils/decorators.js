@@ -35,7 +35,7 @@ const parseResultDecorator = (requestFunc) => async (...args) => {
 };
 
 const composeUrlDecorator = (requestFunc) => async (...args) => {
-  const path = '' || process.env.REACT_APP_URL;
+  const path = '' || process.env.REACT_APP_SERVER_URL;
   args[0] = `${path}${args[0]}`;
   return requestFunc.call(null, ...args);
 };

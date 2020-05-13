@@ -2,15 +2,14 @@ const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 
+require('../enhancers/sequelize')(Sequelize);
+
 const env = process.env.NODE_ENV || 'development';
 const config = require('../db_config')[env];
 
 const basename = path.basename(__filename);
 const db = {};
 let sequelize;
-
-// const dbConfigPath = path.join(__dirname, '..', 'db_config.js');
-// const config = require(__dirname + '/../db_config.js')[env];
 
 if (config.use_env_variable) {
   sequelize = new Sequelize(config.url, config);

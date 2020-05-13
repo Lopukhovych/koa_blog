@@ -12,8 +12,8 @@ const getCurrentArticle = (state) => state.articleItem && state.articleItem.arti
 
 
 export function* saveCommentSaga(action) {
-  yield put(saveCommentStart());
   try {
+    yield put(saveCommentStart());
     const comment = yield saveComment(action.params);
     const currentArticle = yield select(getCurrentArticle);
     if (currentArticle.id === comment.postId) {
